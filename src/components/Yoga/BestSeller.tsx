@@ -52,7 +52,7 @@ const BestSeller: React.FC<Props> = ({ data, start, limit }) => {
                                 .slice(start, limit)
                                 .map((prd, index) => (
                                     <SwiperSlide key={index}>
-                                        <Product data={prd} type='grid' />
+                                        <Product data={prd} type='grid' style='style-1' />
                                     </SwiperSlide>
                                 ))}
                         </Swiper>
