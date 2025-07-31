@@ -76,7 +76,7 @@ const ModalSearch = () => {
                         <div className="heading6">Recently viewed products</div>
                         <div className="list-product pb-5 hide-product-sold grid xl:grid-cols-4 sm:grid-cols-2 gap-7 mt-4">
                             {productData.slice(0, 4).map((product) => (
-                                <Product key={product.id} data={product} type='grid' />
+                                <Product key={product.id} data={product} type='grid' style='style-1'/>
                             ))}
                         </div>
                     </div>

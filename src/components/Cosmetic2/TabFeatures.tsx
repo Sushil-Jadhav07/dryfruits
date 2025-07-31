@@ -89,7 +89,7 @@ const TabFeatures: React.FC<Props> = ({ data, start, limit }) => {
                         >
                             {filteredProducts.slice(start, limit).map((prd, index) => (
                                 <SwiperSlide key={index}>
-                                    <Product data={prd} type='grid' />
+                                    <Product data={prd} type='grid' style='style-1' />
                                 </SwiperSlide>
                             ))}
                         </Swiper>

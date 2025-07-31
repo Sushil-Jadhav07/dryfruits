@@ -55,7 +55,7 @@ const FeaturedProduct: React.FC<Props> = ({ data, start, limit }) => {
                                 >
                                     {data.filter(item => item.category === 'toys-kid').slice(start, limit).map((prd) => (
                                         <SwiperSlide key={prd.id} data-item={prd.id}>
-                                            <Product data={prd} type='grid' />
+                                            <Product data={prd} type='grid' style='style-1' />
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>

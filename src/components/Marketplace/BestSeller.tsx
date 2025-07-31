@@ -47,7 +47,7 @@ const BestSeller: React.FC<Props> = ({ data, start, limit }) => {
                 <div
                     className="list-product grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 grid-cols-2 md:gap-[30px] gap-5 relative section-swiper-navigation style-outline style-small-border md:mt-10 mt-6">
                     {filteredProducts.slice(start, limit).map((prd, index) => (
-                        <Product data={prd} type='marketplace' key={index} />
+                        <Product data={prd} type='marketplace' key={index} style='style-1' />
                     ))}
                 </div>
             </div>

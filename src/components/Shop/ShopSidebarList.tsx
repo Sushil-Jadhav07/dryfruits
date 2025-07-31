@@ -475,7 +475,7 @@ const ShopSidebarList: React.FC<Props> = ({ data, productPerPage, dataType }) =>
                                     item.id === 'no-data' ? (
                                         <div key={item.id} className="no-data-product">No products match the selected criteria.</div>
                                     ) : (
-                                        <Product key={item.id} data={item} type='list' />
+                                        <Product key={item.id} data={item} type='list' style='style-1' />
                                     )
                                 ))}
                             </div>

@@ -56,7 +56,7 @@ const ShopCollection: React.FC<Props> = ({ data }) => {
                                             .filter(product => product.type === 'accessories' && product.category === 'fashion')
                                             .slice(0, 2)
                                             .map(product => (
-                                                <Product data={product} type='grid' key={product.id} />
+                                                <Product data={product} type='grid' key={product.id} style='style-1'/>
                                             ))}
                                     </div>
                                 </div>
@@ -88,7 +88,7 @@ const ShopCollection: React.FC<Props> = ({ data }) => {
                                             .filter(product => product.type === 'accessories' && product.category === 'fashion')
                                             .slice(2, 4)
                                             .map(product => (
-                                                <Product data={product} type='grid' key={product.id} />
+                                                <Product data={product} type='grid' key={product.id} style='style-1' />
                                             ))}
                                     </div>
                                 </div>
@@ -120,7 +120,7 @@ const ShopCollection: React.FC<Props> = ({ data }) => {
                                             .filter(product => product.type === 'accessories' && product.category === 'fashion')
                                             .slice(4, 6)
                                             .map(product => (
-                                                <Product data={product} type='grid' key={product.id} />
+                                                <Product data={product} type='grid' key={product.id} style='style-1' />
                                             ))}
                                     </div>
                                 </div>
