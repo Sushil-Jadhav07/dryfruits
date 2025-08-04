@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation } from 'swiper/modules';
 import 'swiper/css/bundle';
+
 import { useRouter } from 'next/navigation';
 
 const Category = () => {
@@ -17,9 +18,9 @@ const Category = () => {
 
     return (
         <>
-            <div className="trending-block style-six md:py-4 py-4">
+            <div className="trending-block style-six md:py-12 mt-4 py-4">
                 <div className="container">
-                    <div className="heading3 text-center">Our Categories</div>
+                   
                     <div className="list-trending section-swiper-navigation style-small-border style-outline md:mt-8 mt-6">
                         <Swiper
                             spaceBetween={12}
@@ -51,17 +52,17 @@ const Category = () => {
                                 <div className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('vegetables')}>
                                     <div className="bg-img rounded-full overflow-hidden">
                                         <Image
-                                            src={'/images/collection/category-organic1.png'}
+                                            src='/images/collection/purse.webp'
                                             width={500}
                                             height={500}
-                                            alt='outerwear'
+                                            alt='Purse'
                                             priority={true}
                                             className='w-full'
                                         />
                                     </div>
                                     <div className="trending-name text-center mt-5 duration-500">
-                                        <span className='heading5'>Dates</span>
-                                        <span className='text-secondar2'> (12)</span>
+                                        <span className='heading5'>Purse</span>
+                                        
                                     </div>
                                 </div>
                             </SwiperSlide>
@@ -69,7 +70,7 @@ const Category = () => {
                                 <div className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('meat')}>
                                     <div className="bg-img rounded-full overflow-hidden">
                                         <Image
-                                            src={'/images/collection/category-organic2.png'}
+                                            src={'/images/collection/shoes.webp'}
                                              width={500}
                                             height={500}
                                             alt='swimwear'
@@ -78,8 +79,8 @@ const Category = () => {
                                         />
                                     </div>
                                     <div className="trending-name text-center mt-5 duration-500">
-                                        <span className='heading5'>Raisins</span>
-                                        <span className='text-secondar2'> (12)</span>
+                                        <span className='heading5'>Footwear</span>
+                                       
                                     </div>
                                 </div>
                             </SwiperSlide>
@@ -87,7 +88,7 @@ const Category = () => {
                                 <div className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('fruit')}>
                                     <div className="bg-img rounded-full overflow-hidden">
                                         <Image
-                                            src={'/images/collection/category-organic3.png'}
+                                            src={'/images/collection/glasses.webp'}
                                             width={500}
                                             height={500}
                                             alt='clothes'
@@ -96,8 +97,8 @@ const Category = () => {
                                         />
                                     </div>
                                     <div className="trending-name text-center mt-5 duration-500">
-                                        <span className='heading5'>Almonds</span>
-                                        <span className='text-secondar2'> (12)</span>
+                                        <span className='heading5'>Glasses</span>
+                                       
                                     </div>
                                 </div>
                             </SwiperSlide>
@@ -105,7 +106,7 @@ const Category = () => {
                                 <div className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('meat')}>
                                     <div className="bg-img rounded-full overflow-hidden">
                                         <Image
-                                            src={'/images/collection/category-organic4.png'}
+                                            src={'/images/collection/jackets.webp'}
                                              width={500}
                                             height={500}
                                             alt='sets'
@@ -114,8 +115,8 @@ const Category = () => {
                                         />
                                     </div>
                                     <div className="trending-name text-center mt-5 duration-500">
-                                        <span className='heading5'>Cashews</span>
-                                        <span className='text-secondar2'> (12)</span>
+                                        <span className='heading5'>Clothing</span>
+                                      
                                     </div>
                                 </div>
                             </SwiperSlide>
@@ -123,7 +124,7 @@ const Category = () => {
                                 <div className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('vegetables')}>
                                     <div className="bg-img rounded-full overflow-hidden">
                                         <Image
-                                            src={'/images/collection/category-organic5.png'}
+                                            src={'/images/collection/belts.webp'}
                                              width={500}
                                             height={500}
                                             alt='accessories'
@@ -132,8 +133,8 @@ const Category = () => {
                                         />
                                     </div>
                                     <div className="trending-name text-center mt-5 duration-500">
-                                        <span className='heading5'>Walnuts</span>
-                                        <span className='text-secondar2'> (12)</span>
+                                        <span className='heading5'>Belts</span>
+                                      
                                     </div>
                                 </div>
                             </SwiperSlide>
@@ -141,7 +142,7 @@ const Category = () => {
                                 <div className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('drinks')}>
                                     <div className="bg-img rounded-full overflow-hidden">
                                         <Image
-                                            src={'/images/collection/category-organic6.png'}
+                                            src={'/images/collection/perfumes.webp'}
                                              width={500}
                                             height={500}
                                             alt='lingerie'
@@ -150,8 +151,8 @@ const Category = () => {
                                         />
                                     </div>
                                     <div className="trending-name text-center mt-5 duration-500">
-                                        <span className='heading5'>Flaxseeds</span>
-                                        <span className='text-secondar2'> (12)</span>
+                                        <span className='heading5'>Perfumes</span>
+                                       
                                     </div>
                                 </div>
                             </SwiperSlide>
@@ -159,7 +160,7 @@ const Category = () => {
                                 <div className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('fruit')}>
                                     <div className="bg-img rounded-full overflow-hidden">
                                         <Image
-                                            src={'/images/collection/category-organic3.png'}
+                                            src={'/images/collection/wallets.webp'}
                                              width={500}
                                             height={500}
                                             alt='lingerie'
@@ -168,8 +169,8 @@ const Category = () => {
                                         />
                                     </div>
                                     <div className="trending-name text-center mt-5 duration-500">
-                                        <span className='heading5'>Pistachios</span>
-                                        <span className='text-secondar2'> (12)</span>
+                                        <span className='heading5'>Wallets</span>
+                                       
                                     </div>
                                 </div>
                             </SwiperSlide>

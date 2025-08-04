@@ -32,14 +32,18 @@ export default function Home() {
     <>
       {/* <TopNavOne props="style-one bg-black" slogan="New customers save 10% with the code GET10" /> */}
        <div id="header" className='relative w-full'>
-                <BannerTop props="bg-black py-3" textColor='text-white' bgLine='bg-white' />
+              
                 <MenuTwo />
-            <Category />
-                 <SliderOrganic />
+            
             </div>
 
-            <Banner />
-      <WhatNewOne data={productData} start={0} limit={4} />
+           
+           
+                 <SliderOrganic />
+                 <Category />
+                 {/* <Banner /> */}
+                 
+      <WhatNewOne data={productData} start={0} limit={8} />
 
       <Collection />
             <PopularProduct data={productData} start={0} limit={8} />    
@@ -48,8 +52,8 @@ export default function Home() {
       {/* <TabFeatures data={productData} start={0} limit={6} /> */}
       <Banner2 />
 
-            <Benefit props="md:py-15 py-12" />
-      <Testimonial data={testimonialData} limit={6} />
+            {/* <Benefit props="md:py-15 py-12" />
+      <Testimonial data={testimonialData} limit={6} /> */}
       
       <Brand />
       <Footer />

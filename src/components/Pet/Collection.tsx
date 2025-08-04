@@ -52,7 +52,7 @@ const Collection = () => {
                                 <div className="trending-item block relative cursor-pointer" onClick={() => handleCategoryClick('pet')}>
                                     <div className="bg-img rounded-[32px] overflow-hidden">
                                         <Image
-                                            src={'/images/collection/food.png'}
+                                            src={'/images/brand/1.png'}
                                             width={1000}
                                             height={1000}
                                             alt='outerwear'
@@ -60,16 +60,14 @@ const Collection = () => {
                                             className='w-full'
                                         />
                                     </div>
-                                    <div className="trending-name text-center mt-5 duration-500">
-                                        <span className='heading6'>Food</span>
-                                    </div>
+                                   
                                 </div>
                             </SwiperSlide>
                             <SwiperSlide>
                                 <div className="trending-item block relative cursor-pointer" onClick={() => handleCategoryClick('pet')}>
                                     <div className="bg-img rounded-[32px] overflow-hidden">
                                         <Image
-                                            src={'/images/collection/outfit.png'}
+                                            src={'/images/brand/2.png'}
                                             width={1000}
                                             height={1000}
                                             alt='swimwear'
@@ -77,16 +75,14 @@ const Collection = () => {
                                             className='w-full'
                                         />
                                     </div>
-                                    <div className="trending-name text-center mt-5 duration-500">
-                                        <span className='heading6'>Outfits</span>
-                                    </div>
+                                   
                                 </div>
                             </SwiperSlide>
                             <SwiperSlide>
                                 <div className="trending-item block relative cursor-pointer" onClick={() => handleCategoryClick('pet')}>
                                     <div className="bg-img rounded-[32px] overflow-hidden">
                                         <Image
-                                            src={'/images/collection/bed.png'}
+                                            src={'/images/brand/3.png'}
                                             width={1000}
                                             height={1000}
                                             alt='clothes'
@@ -94,16 +90,14 @@ const Collection = () => {
                                             className='w-full'
                                         />
                                     </div>
-                                    <div className="trending-name text-center mt-5 duration-500">
-                                        <span className='heading6'>Fashion</span>
-                                    </div>
+                                    
                                 </div>
                             </SwiperSlide>
                             <SwiperSlide>
                                 <div className="trending-item block relative cursor-pointer" onClick={() => handleCategoryClick('pet')}>
                                     <div className="bg-img rounded-[32px] overflow-hidden">
                                         <Image
-                                            src={'/images/collection/toys.png'}
+                                            src={'/images/brand/4.png'}
                                             width={1000}
                                             height={1000}
                                             alt='sets'
@@ -111,16 +105,14 @@ const Collection = () => {
                                             className='w-full'
                                         />
                                     </div>
-                                    <div className="trending-name text-center mt-5 duration-500">
-                                        <span className='heading6'>Toys</span>
-                                    </div>
+                                   
                                 </div>
                             </SwiperSlide>
                             <SwiperSlide>
                                 <div className="trending-item block relative cursor-pointer" onClick={() => handleCategoryClick('pet')}>
                                     <div className="bg-img rounded-[32px] overflow-hidden">
                                         <Image
-                                            src={'/images/collection/supplements.png'}
+                                            src={'/images/brand/5.png'}
                                             width={1000}
                                             height={1000}
                                             alt='accessories'
@@ -128,16 +120,14 @@ const Collection = () => {
                                             className='w-full'
                                         />
                                     </div>
-                                    <div className="trending-name text-center mt-5 duration-500">
-                                        <span className='heading6'>Supplements</span>
-                                    </div>
+                                  
                                 </div>
                             </SwiperSlide>
                             <SwiperSlide>
                                 <div className="trending-item block relative cursor-pointer" onClick={() => handleCategoryClick('pet')}>
                                     <div className="bg-img rounded-[32px] overflow-hidden">
                                         <Image
-                                            src={'/images/collection/pharmacy.png'}
+                                            src={'/images/brand/6.png'}
                                             width={1000}
                                             height={1000}
                                             alt='lingerie'
@@ -145,16 +135,14 @@ const Collection = () => {
                                             className='w-full'
                                         />
                                     </div>
-                                    <div className="trending-name text-center mt-5 duration-500">
-                                        <span className='heading6'>Pharmacy</span>
-                                    </div>
+                                   
                                 </div>
                             </SwiperSlide>
                             <SwiperSlide>
                                 <div className="trending-item block relative cursor-pointer" onClick={() => handleCategoryClick('pet')}>
                                     <div className="bg-img rounded-[32px] overflow-hidden">
                                         <Image
-                                            src={'/images/collection/ring.png'}
+                                            src={'/images/brand/7.png'}
                                             width={1000}
                                             height={1000}
                                             alt='lingerie'
@@ -162,9 +150,7 @@ const Collection = () => {
                                             className='w-full'
                                         />
                                     </div>
-                                    <div className="trending-name text-center mt-5 duration-500">
-                                        <span className='heading6'>Ring</span>
-                                    </div>
+                                   
                                 </div>
                             </SwiperSlide>
                         </Swiper>

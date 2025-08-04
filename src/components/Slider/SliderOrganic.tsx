@@ -7,6 +7,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css/bundle';
 
+import Slider1  from '../../../public/images/banner/1.png'
+import Slider2  from '../../../public/images/banner/2.png'
+import Slider3  from '../../../public/images/banner/3.png'
+
 const SliderOrganic = () => {
     return (
         <>
@@ -26,17 +30,12 @@ const SliderOrganic = () => {
                         <SwiperSlide>
                             <div className="slider-item h-full w-full relative">
                                 <div className="container w-full h-full flex items-center">
-                                    <div className="text-content sm:w-1/2 w-2/3">
-                                        <div className="text-sub-display">Sale! Up To 50% Off!</div>
-                                        <div className="text-display md:mt-5 mt-2">Discover Your Work or Organic</div>
-                                        <div className="body1 mt-4">Check out our latest collection of chic and trendy outfits that will keep you looking stylish all year round.</div>
-                                        <Link href='/shop/breadcrumb-img' className="button-main md:mt-8 mt-3">Shop Now</Link>
-                                    </div>
+                                   
                                     <div className="sub-img absolute left-0 top-0 w-full h-full z-[-1]">
                                         <Image
-                                            src={'/images/slider/organic1.png'}
-                                            width={4000}
-                                            height={3000}
+                                            src={Slider1}
+                                            width={3840}
+                                            height={2160}
                                             alt='organic1'
                                             priority={true}
                                             className='w-full h-full object-cover'
@@ -48,17 +47,12 @@ const SliderOrganic = () => {
                         <SwiperSlide>
                             <div className="slider-item h-full w-full relative">
                                 <div className="container w-full h-full flex items-center">
-                                    <div className="text-content sm:w-1/2 w-2/3">
-                                        <div className="text-sub-display">Sale! Up To 50% Off!</div>
-                                        <div className="text-display md:mt-5 mt-2">Discover Your Work or Organic</div>
-                                        <div className="body1 mt-4">Check out our latest collection of chic and trendy outfits that will keep you looking stylish all year round.</div>
-                                        <Link href='/shop/breadcrumb-img' className="button-main md:mt-8 mt-3">Shop Now</Link>
-                                    </div>
+                                   
                                     <div className="sub-img absolute left-0 top-0 w-full h-full z-[-1]">
                                         <Image
-                                            src={'/images/slider/organic2.png'}
-                                            width={4000}
-                                            height={3000}
+                                            src={Slider2}
+                                            width={1920}
+                                            height={1080}
                                             alt='organic2'
                                             priority={true}
                                             className='w-full h-full object-cover'
@@ -70,17 +64,12 @@ const SliderOrganic = () => {
                         <SwiperSlide>
                             <div className="slider-item h-full w-full relative">
                                 <div className="container w-full h-full flex items-center">
-                                    <div className="text-content sm:w-1/2 w-2/3">
-                                        <div className="text-sub-display">Sale! Up To 50% Off!</div>
-                                        <div className="text-display md:mt-5 mt-2">Discover Your Work or Organic</div>
-                                        <div className="body1 mt-4">Check out our latest collection of chic and trendy outfits that will keep you looking stylish all year round.</div>
-                                        <Link href='/shop/breadcrumb-img' className="button-main md:mt-8 mt-3">Shop Now</Link>
-                                    </div>
+                                  
                                     <div className="sub-img absolute left-0 top-0 w-full h-full z-[-1]">
                                         <Image
-                                            src={'/images/slider/organic3.png'}
-                                            width={4000}
-                                            height={3000}
+                                            src={Slider3}
+                                            width={1920}
+                                            height={1080}
                                             alt='organic3'
                                             priority={true}
                                             className='w-full h-full object-cover'

@@ -12,22 +12,22 @@ interface Props {
 }
 
 const PopularProduct: React.FC<Props> = ({ data, start, limit }) => {
-    const [activeTab, setActiveTab] = useState<string>('vegetables');
+    const [activeTab, setActiveTab] = useState<string>('Gucci');
 
     const handleTabClick = (type: string) => {
         setActiveTab(type);
     };
 
-    const filteredProducts = data.filter((product) => product.type === activeTab && (product.category === 'organic'));
+    const filteredProducts = data.filter((product) => product.brand === activeTab);
 
     return (
         <>
             <div className="whate-new-block md:pt-20 pt-10">
                 <div className="container">
                     <div className="heading flex flex-col items-center text-center">
-                        <div className="heading3">Popular Product</div>
+                        <div className="heading3">Popular Brands</div>
                         <div className="menu-tab flex items-center gap-2 p-1 bg-surface rounded-2xl md:mt-8 mt-6">
-                            {['Peanuts', 'Walnuts', 'Almonds'].map((type) => (
+                            {['Gucci', 'Hermes', 'Zara','Adidas'].map((type) => (
                                 <div
                                     key={type}
                                     className={`tab-item relative text-secondary text-button-uppercase py-2 px-5 cursor-pointer duration-500 hover:text-black 
