@@ -26,8 +26,8 @@ const CategoryBrand: React.FC<CategoryBrandProps> = ({ brand = [] }) => {
 	return (
 		<div className="trending-block style-six md:py-12 mt-4 py-4">
 			<div className="container">
-				<div className="list-trending section-swiper-navigation style-small-border style-outline md:mt-8 mt-6">
-					<Swiper
+				<div className="list-trending section-swiper-navigation grid grid-cols-5 style-small-border style-outline md:mt-8 mt-6">
+					{/* <Swiper
 						spaceBetween={12}
 						slidesPerView={2}
 						navigation
@@ -41,29 +41,31 @@ const CategoryBrand: React.FC<CategoryBrandProps> = ({ brand = [] }) => {
 						}}
 						className="h-full"
 					>
-						{brand.map((item, index) => (
-							<SwiperSlide key={index}>
-								<div
-									onClick={() => handleBrandClick(item.name)}
-									className="trending-item block relative cursor-pointer"
-								>
-									<div className="bg-img rounded-full overflow-hidden">
-										<Image
-											src={item.image}
-											width={500}
-											height={500}
-											alt={item.name}
-											priority
-											className="w-full object-cover"
-										/>
-									</div>
-									<div className="trending-name text-center mt-5 duration-500">
-										<span className="heading5 capitalize">{item.name}</span>
-									</div>
-								</div>
-							</SwiperSlide>
-						))}
-					</Swiper>
+						
+					</Swiper> */}
+
+					{brand.map((item, index) => (
+
+						<div
+							onClick={() => handleBrandClick(item.name)}
+							className="trending-item block relative cursor-pointer"
+						>
+							<div className="bg-img w-[240px] rounded-full overflow-hidden">
+								<Image
+									src={item.image}
+									width={400}
+									height={400}
+									alt={item.name}
+									priority
+									className="w-full object-cover"
+								/>
+							</div>
+							<div className="trending-name text-center mt-5 duration-500">
+								<span className="heading5 capitalize">{item.name}</span>
+							</div>
+						</div>
+
+					))}
 				</div>
 			</div>
 		</div>
