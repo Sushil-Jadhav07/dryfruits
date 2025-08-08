@@ -7,10 +7,6 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css/bundle';
 
-import Slider1  from '../../../public/images/banner/1.png'
-import Slider2  from '../../../public/images/banner/2.png'
-import Slider3  from '../../../public/images/banner/3.png'
-
 const SliderOrganic = () => {
     return (
         <>
@@ -33,7 +29,7 @@ const SliderOrganic = () => {
                                    
                                     <div className="sub-img absolute left-0 top-0 w-full h-full z-[-1]">
                                         <Image
-                                            src={Slider1}
+                                            src={'/images/banner/1.png'}
                                             width={3840}
                                             height={2160}
                                             alt='organic1'
@@ -50,7 +46,7 @@ const SliderOrganic = () => {
                                    
                                     <div className="sub-img absolute left-0 top-0 w-full h-full z-[-1]">
                                         <Image
-                                            src={Slider2}
+                                            src={'/images/banner/2.png'}
                                             width={1920}
                                             height={1080}
                                             alt='organic2'
@@ -67,7 +63,7 @@ const SliderOrganic = () => {
                                   
                                     <div className="sub-img absolute left-0 top-0 w-full h-full z-[-1]">
                                         <Image
-                                            src={Slider3}
+                                            src={'/images/banner/3.png'}
                                             width={1920}
                                             height={1080}
                                             alt='organic3'

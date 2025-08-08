@@ -13,14 +13,14 @@ const Category = () => {
     const router = useRouter()
 
     const handleTypeClick = (type: string) => {
-        router.push(`/shop/breadcrumb1?type=${type}`);
+        router.push(`/categories/${type}`);
     };
 
     return (
         <>
             <div className="trending-block style-six md:py-12 mt-4 py-4">
                 <div className="container">
-                   
+
                     <div className="list-trending section-swiper-navigation style-small-border style-outline md:mt-8 mt-6">
                         <Swiper
                             spaceBetween={12}
@@ -49,7 +49,7 @@ const Category = () => {
                             className='h-full'
                         >
                             <SwiperSlide>
-                                <div className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('vegetables')}>
+                                <Link href='/categories/purse' className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('vegetables')}>
                                     <div className="bg-img rounded-full overflow-hidden">
                                         <Image
                                             src='/images/collection/purse.webp'
@@ -62,16 +62,16 @@ const Category = () => {
                                     </div>
                                     <div className="trending-name text-center mt-5 duration-500">
                                         <span className='heading5'>Purse</span>
-                                        
+
                                     </div>
-                                </div>
+                                </Link>
                             </SwiperSlide>
                             <SwiperSlide>
-                                <div className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('meat')}>
+                                <div className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('footwear')}>
                                     <div className="bg-img rounded-full overflow-hidden">
                                         <Image
                                             src={'/images/collection/shoes.webp'}
-                                             width={500}
+                                            width={500}
                                             height={500}
                                             alt='swimwear'
                                             priority={true}
@@ -80,12 +80,12 @@ const Category = () => {
                                     </div>
                                     <div className="trending-name text-center mt-5 duration-500">
                                         <span className='heading5'>Footwear</span>
-                                       
+
                                     </div>
                                 </div>
                             </SwiperSlide>
                             <SwiperSlide>
-                                <div className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('fruit')}>
+                                <div className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('glasses')}>
                                     <div className="bg-img rounded-full overflow-hidden">
                                         <Image
                                             src={'/images/collection/glasses.webp'}
@@ -98,16 +98,16 @@ const Category = () => {
                                     </div>
                                     <div className="trending-name text-center mt-5 duration-500">
                                         <span className='heading5'>Glasses</span>
-                                       
+
                                     </div>
                                 </div>
                             </SwiperSlide>
                             <SwiperSlide>
-                                <div className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('meat')}>
+                                <div className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('clothing')}>
                                     <div className="bg-img rounded-full overflow-hidden">
                                         <Image
                                             src={'/images/collection/jackets.webp'}
-                                             width={500}
+                                            width={500}
                                             height={500}
                                             alt='sets'
                                             priority={true}
@@ -116,16 +116,16 @@ const Category = () => {
                                     </div>
                                     <div className="trending-name text-center mt-5 duration-500">
                                         <span className='heading5'>Clothing</span>
-                                      
+
                                     </div>
                                 </div>
                             </SwiperSlide>
                             <SwiperSlide>
-                                <div className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('vegetables')}>
+                                <div className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('belts')}>
                                     <div className="bg-img rounded-full overflow-hidden">
                                         <Image
                                             src={'/images/collection/belts.webp'}
-                                             width={500}
+                                            width={500}
                                             height={500}
                                             alt='accessories'
                                             priority={true}
@@ -134,16 +134,16 @@ const Category = () => {
                                     </div>
                                     <div className="trending-name text-center mt-5 duration-500">
                                         <span className='heading5'>Belts</span>
-                                      
+
                                     </div>
                                 </div>
                             </SwiperSlide>
                             <SwiperSlide>
-                                <div className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('drinks')}>
+                                <div className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('perfumes')}>
                                     <div className="bg-img rounded-full overflow-hidden">
                                         <Image
                                             src={'/images/collection/perfumes.webp'}
-                                             width={500}
+                                            width={500}
                                             height={500}
                                             alt='lingerie'
                                             priority={true}
@@ -152,16 +152,16 @@ const Category = () => {
                                     </div>
                                     <div className="trending-name text-center mt-5 duration-500">
                                         <span className='heading5'>Perfumes</span>
-                                       
+
                                     </div>
                                 </div>
                             </SwiperSlide>
                             <SwiperSlide>
-                                <div className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('fruit')}>
+                                <div className="trending-item block relative cursor-pointer" onClick={() => handleTypeClick('wallets')}>
                                     <div className="bg-img rounded-full overflow-hidden">
                                         <Image
                                             src={'/images/collection/wallets.webp'}
-                                             width={500}
+                                            width={500}
                                             height={500}
                                             alt='lingerie'
                                             priority={true}
@@ -170,7 +170,7 @@ const Category = () => {
                                     </div>
                                     <div className="trending-name text-center mt-5 duration-500">
                                         <span className='heading5'>Wallets</span>
-                                       
+
                                     </div>
                                 </div>
                             </SwiperSlide>

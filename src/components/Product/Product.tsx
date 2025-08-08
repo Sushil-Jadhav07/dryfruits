@@ -36,7 +36,7 @@ const Product: React.FC<ProductProps> = ({ data, type, style }) => {
     const { openQuickview } = useModalQuickviewContext()
     const router = useRouter()
 
-   
+
     const handleAddToCart = () => {
         if (!cartState.cartArray.find(item => item.id === data.id)) {
             addToCart({ ...data });
@@ -83,8 +83,8 @@ const Product: React.FC<ProductProps> = ({ data, type, style }) => {
         router.push(`/product/default?id=${productId}`);
     };
 
-    let percentSale = Math.floor(100 - ((data.price / data.originPrice) * 100))
-    let percentSold = Math.floor((data.sold / data.quantity) * 100)
+    // let percentSale = Math.floor(100 - ((data.price / data.originPrice) * 100))
+    // let percentSold = Math.floor((data.sold / data.quantity) * 100)
 
     return (
         <>
@@ -92,7 +92,7 @@ const Product: React.FC<ProductProps> = ({ data, type, style }) => {
                 <div className={`product-item grid-type ${style}`}>
                     <div onClick={() => handleDetailProduct(data.id)} className="product-main cursor-pointer block">
                         <div className="product-thumb bg-white relative overflow-hidden rounded-2xl">
-                          
+
                             <div className="product-img w-full h-full aspect-[3/4]">
                                 {activeColor ? (
                                     <>
@@ -133,7 +133,7 @@ const Product: React.FC<ProductProps> = ({ data, type, style }) => {
                                     </>
                                 )}
                             </div>
-                            
+
                             {style === 'style-2' || style === 'style-4' ? (
                                 <div className="list-size-block flex items-center justify-center gap-4 absolute bottom-0 left-0 w-full h-8">
                                     {data.sizes.map((item, index) => (
@@ -141,7 +141,7 @@ const Product: React.FC<ProductProps> = ({ data, type, style }) => {
                                     ))}
                                 </div>
                             ) : <></>}
-                          
+
                             {style === 'style-2' || style === 'style-5' ?
                                 <>
                                     <div className={`list-action flex items-center justify-center gap-3 px-5 absolute w-full ${style === 'style-2' ? 'bottom-12' : 'bottom-5'} max-lg:hidden`}>
@@ -208,7 +208,7 @@ const Product: React.FC<ProductProps> = ({ data, type, style }) => {
                                                         <div
                                                             className={`size-item w-10 h-10 rounded-full flex items-center justify-center text-button bg-white border border-line ${activeSize === item ? 'active' : ''}`}
                                                             key={index}
-                                                           
+
                                                         >
                                                             {item}
                                                         </div>
@@ -253,11 +253,11 @@ const Product: React.FC<ProductProps> = ({ data, type, style }) => {
                         <div className="product-infor mt-4 lg:mb-7">
                             <div className="product-sold sm:pb-4 pb-2">
                                 <div className="progress bg-line h-1.5 w-full rounded-full overflow-hidden relative">
-                                    <div
+                                    {/* <div
                                         className={`progress-sold bg-red absolute left-0 top-0 h-full`}
                                         style={{ width: `${percentSold}%` }}
                                     >
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <div className="flex items-center justify-between gap-3 gap-y-1 flex-wrap mt-2">
                                     <div className="text-button-uppercase">
@@ -271,9 +271,9 @@ const Product: React.FC<ProductProps> = ({ data, type, style }) => {
                                 </div>
                             </div>
                             <div className="product-name text-title ">{data.name}</div>
-                            
-                           
-                           
+
+
+
 
                             {style === 'style-5' &&
                                 <>
@@ -282,7 +282,7 @@ const Product: React.FC<ProductProps> = ({ data, type, style }) => {
                                             className="add-cart-btn w-full text-button-uppercase py-2.5 text-center mt-2 rounded-full duration-300 bg-white border border-black hover:bg-black hover:text-white max-lg:hidden"
                                             onClick={e => {
                                                 e.stopPropagation()
-                                               
+
                                             }}
                                         >
                                             Add To Cart
@@ -305,18 +305,18 @@ const Product: React.FC<ProductProps> = ({ data, type, style }) => {
                 </div>
             ) : (
                 <>
-                   
+
                 </>
             )
             }
 
             {type === 'marketplace' ? (
                 <div className="product-item  p-4 border border-line rounded-2xl" >
-                
+
                     <div className="product-infor mt-4">
                         <span className="text-title">{data.name}</span>
-                        
-                        
+
+
                     </div>
                 </div>
             ) : (
