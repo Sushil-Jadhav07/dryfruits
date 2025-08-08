@@ -136,16 +136,16 @@ const Product: React.FC<ProductProps> = ({ data, type, style }) => {
 
                             {style === 'style-2' || style === 'style-4' ? (
                                 <div className="list-size-block flex items-center justify-center gap-4 absolute bottom-0 left-0 w-full h-8">
-                                    {data.sizes.map((item, index) => (
+                                    {/* {data.sizes.map((item, index) => (
                                         <strong key={index} className="size-item text-xs font-bold uppercase">{item}</strong>
-                                    ))}
+                                    ))} */}
                                 </div>
                             ) : <></>}
 
                             {style === 'style-2' || style === 'style-5' ?
                                 <>
                                     <div className={`list-action flex items-center justify-center gap-3 px-5 absolute w-full ${style === 'style-2' ? 'bottom-12' : 'bottom-5'} max-lg:hidden`}>
-                                        {style === 'style-2' && (
+                                        {/* {style === 'style-2' && (
                                             <div
                                                 className={`add-cart-btn w-9 h-9 flex items-center justify-center rounded-full bg-white duration-300 relative ${compareState.compareArray.some(item => item.id === data.id) ? 'active' : ''}`}
                                                 onClick={e => {
@@ -224,12 +224,12 @@ const Product: React.FC<ProductProps> = ({ data, type, style }) => {
                                                     Add To cart
                                                 </div>
                                             </div>
-                                        )}
+                                        )} */}
                                     </div>
                                 </> :
                                 <></>
                             }
-                            <div className="list-action-icon flex items-center justify-center gap-2 absolute w-full bottom-3 z-[1] lg:hidden">
+                            {/* <div className="list-action-icon flex items-center justify-center gap-2 absolute w-full bottom-3 z-[1] lg:hidden">
                                 <div
                                     className="quick-view-btn w-9 h-9 flex items-center justify-center rounded-lg duration-300 bg-white hover:bg-black hover:text-white"
                                     onClick={(e) => {
@@ -248,16 +248,16 @@ const Product: React.FC<ProductProps> = ({ data, type, style }) => {
                                 >
                                     <Icon.ShoppingBagOpen className='text-lg' />
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                         <div className="product-infor mt-4 lg:mb-7">
-                            <div className="product-sold sm:pb-4 pb-2">
+                            {/* <div className="product-sold sm:pb-4 pb-2">
                                 <div className="progress bg-line h-1.5 w-full rounded-full overflow-hidden relative">
-                                    {/* <div
+                                    <div
                                         className={`progress-sold bg-red absolute left-0 top-0 h-full`}
                                         style={{ width: `${percentSold}%` }}
                                     >
-                                    </div> */}
+                                    </div>
                                 </div>
                                 <div className="flex items-center justify-between gap-3 gap-y-1 flex-wrap mt-2">
                                     <div className="text-button-uppercase">
@@ -269,8 +269,8 @@ const Product: React.FC<ProductProps> = ({ data, type, style }) => {
                                         <span className='max-sm:text-xs'>{data.quantity - data.sold}</span>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="product-name text-title ">{data.name}</div>
+                            </div> */}
+                            <div className=" text-title ">{data.name}</div>
 
 
 

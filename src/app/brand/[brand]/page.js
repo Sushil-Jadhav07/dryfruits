@@ -7,6 +7,8 @@ import productData from '@/data/productBrand.json';
 import Product from '@/components/Product/Product'; // <-- adjust this path to your actual Product component
 import SkeletonCard from '@/components/SkeletonCard';
 import Footer from '@/components/Footer/Footer';
+import BannerCollection from '@/components/Categories/BannerCollection';
+import BannerBrand from '@/components/Brand/BannerBrand';
 
 const BrandPage = () => {
 	const { brand } = useParams();
@@ -51,17 +53,11 @@ const BrandPage = () => {
 	return (
 		<div className="w-full">
 			<MenuTwo />
-
-			<div className="text-center py-8 px-4">
-				<h1 className="text-4xl md:text-6xl font-bold capitalize">{decodedBrand}</h1>
-				<p className="text-gray-500 text-base md:text-lg mt-2">
-					{loading ? 'Loading products…' : `Showing ${mappedForProductCard.length} products from ${decodedBrand}`}
-				</p>
-			</div>
+			<BannerBrand url={"/images/banner/bannerCollection/brand.webp"} title={brand} />
 
 			{/* Grid */}
 			<div className="container">
-				<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4 pb-12">
+				<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-36 px-4 pb-12">
 					{loading
 						? Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={`skeleton-${i}`} />)
 						: mappedForProductCard.map((data) => (
@@ -69,7 +65,7 @@ const BrandPage = () => {
 								key={data.id}
 								data={data}
 								type="grid"
-								style="style-2"  // or "style-5" etc. – whichever variant you prefer
+								style="style-1"  // or "style-5" etc. – whichever variant you prefer
 							/>
 						))}
 				</div>

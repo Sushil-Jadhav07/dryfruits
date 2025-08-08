@@ -31,30 +31,30 @@ export default function Home() {
   return (
     <>
       {/* <TopNavOne props="style-one bg-black" slogan="New customers save 10% with the code GET10" /> */}
-       <div id="header" className='relative w-full'>
-              
-                <MenuTwo />
-            
-            </div>
+      <div id="header" className='relative w-full'>
 
-           
-           
-                 <SliderOrganic />
-                 <Category />
-                 {/* <Banner /> */}
-                 
+        <MenuTwo />
+
+      </div>
+
+
+
+      <SliderOrganic />
+      <Category />
+      {/* <Banner /> */}
+
       <WhatNewOne data={productData} start={0} limit={8} />
 
       <Collection />
-            <PopularProduct data={productData} start={0} limit={8} />    
-          
+      <PopularProduct data={productData} start={0} limit={8} />
+
 
       {/* <TabFeatures data={productData} start={0} limit={6} /> */}
       <Banner2 />
 
-            {/* <Benefit props="md:py-15 py-12" />
+      {/* <Benefit props="md:py-15 py-12" />
       <Testimonial data={testimonialData} limit={6} /> */}
-      
+
       <Brand />
       <Footer />
       {/* <ModalNewsletter /> */}
