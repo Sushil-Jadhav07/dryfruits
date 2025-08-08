@@ -6,6 +6,7 @@ import MenuTwo from '@/components/Header/Menu/MenuTwo';
 import productData from '@/data/productBrand.json';
 import Product from '@/components/Product/Product'; // <-- adjust this path to your actual Product component
 import SkeletonCard from '@/components/SkeletonCard';
+import Footer from '@/components/Footer/Footer';
 
 const BrandPage = () => {
 	const { brand } = useParams();
@@ -73,6 +74,7 @@ const BrandPage = () => {
 						))}
 				</div>
 			</div>
+			<Footer />
 		</div>
 	);
 };

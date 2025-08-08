@@ -6,6 +6,7 @@ import BannerCollection from '@/components/Categories/BannerCollection';
 import MenuTwo from '@/components/Header/Menu/MenuTwo';
 import CategoryBrand from '@/components/Brand/CategoryBrand';
 import productData from "@/data/productBrand.json";
+import Footer from '@/components/Footer/Footer';
 
 const Purse = () => {
   const category = "Purse";
@@ -45,6 +46,7 @@ const Purse = () => {
       <MenuTwo />
       <BannerCollection url="/images/banner/bannerCollection/purse.webp" title="Purse" />
       <CategoryBrand brand={brands} handleBrandClick={handleBrandClick} />
+      <Footer />
     </div>
   );
 };
