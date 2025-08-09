@@ -47,6 +47,7 @@ const CategoryBrand: React.FC<CategoryBrandProps> = ({ brand = [] }) => {
 					{brand.map((item, index) => (
 
 						<div
+							key={index}
 							onClick={() => handleBrandClick(item.name)}
 							className="trending-item block relative cursor-pointer"
 						>
