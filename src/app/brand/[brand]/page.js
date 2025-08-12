@@ -53,7 +53,7 @@ const BrandPage = () => {
 	return (
 		<div className="w-full">
 			<MenuTwo />
-			<BannerBrand url={"/images/banner/bannerCollection/brand.webp"} title={brand} />
+			{/* <BannerBrand url={"/images/banner/bannerCollection/brand.webp"} title={brand} /> */}
 
 			{/* Grid */}
 			<div className="container">
