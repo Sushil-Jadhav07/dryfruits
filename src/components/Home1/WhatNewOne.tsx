@@ -27,7 +27,7 @@ const WhatNewOne: React.FC<Props> = ({ data, start, limit }) => {
                     <div className="heading flex flex-col items-center text-center">
                         <div className="heading3">What{String.raw`'s`} new</div>
                         <div className="menu-tab flex items-center gap-2 p-1 bg-surface rounded-2xl mt-6">
-                            {['Purse', 'Footwear', 'Glasses', 'Clothing', 'Belts'].map((type) => (
+                            {['Purse', 'Footwear', 'Glasses', 'Clothing', 'Belts', 'Accessories', 'Bags', 'Jewelry', 'Watches'].map((type) => (
                                 <div
                                     key={type}
                                     className={`tab-item relative text-secondary text-button-uppercase py-2 px-5 cursor-pointer duration-500 hover:text-black ${activeTab === type ? 'active' : ''}`}
