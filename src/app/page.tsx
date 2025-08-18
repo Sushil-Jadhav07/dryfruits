@@ -48,8 +48,6 @@ export default function Home() {
      
       <PopularProduct start={0} limit={8} />
 
-
-
       <Banner2 />
 
       {/* <Benefit props="md:py-15 py-12" />
