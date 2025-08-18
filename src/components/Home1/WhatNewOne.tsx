@@ -182,7 +182,7 @@ const WhatNewOne: React.FC<Props> = ({ start, limit }) => {
             ],
             thumbImage: finalImageUrls,
             images: finalFullImageUrls,
-            coverImage: coverImageUrl, // Set the cover image
+            coverImage: coverImageUrl || '/images/product/1000x1000.png', // Set the cover image with fallback
             description: sanityProduct.description || 'No description available',
             action: 'add',
             slug: sanityProduct.slug?.current || sanityProduct._id

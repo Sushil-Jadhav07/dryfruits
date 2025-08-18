@@ -3,9 +3,7 @@ import TopNavOne from '@/components/Header/TopNav/TopNavOne'
 import MenuTwo from '@/components/Header/Menu/MenuTwo'
 import SliderTwo from '@/components/Slider/SliderTwo'
 import WhatNewOne from '@/components/Home1/WhatNewOne'
-import productData from '@/data/Product.json'
 import Collection from '@/components/Home2/Collection'
-import TabFeatures from '@/components/Home2/TabFeatures'
 import Banner from '@/components/Home1/Banner'
 import Benefit from '@/components/Home1/Benefit'
 import Instagram from '@/components/Home1/Instagram'
@@ -24,7 +22,7 @@ export default function HomeTwo() {
             <Collection props="pt-5" />
             <WhatNewOne start={0} limit={4} />
             <Banner />
-            <TabFeatures data={productData} start={8} limit={16} />
+            {/* <TabFeatures data={productData} start={8} limit={16} /> */}
             <Benefit props="md:mt-20 mt-10 py-10 px-2.5 bg-surface rounded-3xl" />
             <Instagram />
             <Brand />

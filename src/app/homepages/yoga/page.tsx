@@ -2,10 +2,8 @@ import React from 'react'
 import TopNavOne from '@/components/Header/TopNav/TopNavOne'
 import MenuYoga from '@/components/Header/Menu/MenuYoga'
 import SliderYoga from '@/components/Slider/SliderYoga'
-import productData from '@/data/Product.json'
-import BestSeller from '@/components/Yoga/BestSeller'
+
 import Banner from '@/components/Yoga/Banner'
-import TabFeatures from '@/components/Yoga/TabFeatures'
 import WhyChooseUs from '@/components/Yoga/WhyChooseUs'
 import FlashSale from '@/components/Yoga/FlashSale'
 import blogData from '@/data/Blog.json'
@@ -26,9 +24,9 @@ export default function HomeYoga() {
                 <MenuYoga />
                 <SliderYoga />
             </div>
-            <BestSeller data={productData} start={0} limit={6} />
+            {/* <BestSeller data={productData} start={0} limit={6} /> */}
             <Banner />
-            <TabFeatures data={productData} start={0} limit={4} />
+            {/* <TabFeatures data={productData} start={0} limit={4} /> */}
             <Benefit props="py-10 bg-surface md:mt-20 mt-10" />
             <WhyChooseUs />
             <FlashSale />

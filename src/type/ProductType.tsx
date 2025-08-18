@@ -24,7 +24,7 @@ export interface ProductType {
     variation: Variation[],
     thumbImage: Array<string>,
     images: Array<string>,
-    coverImage: string, // Added cover image field
+    coverImage?: string, // Made cover image optional
     description: string,
     action: string,
     slug: string

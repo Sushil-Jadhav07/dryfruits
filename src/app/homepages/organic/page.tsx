@@ -4,7 +4,7 @@ import MenuOrganic from '@/components/Header/Menu/MenuOrganic'
 import SliderOrganic from '@/components/Slider/SliderOrganic'
 import Category from '@/components/Organic/Category'
 import Banner from '@/components/Organic/Banner'
-import productData from '@/data/Product.json'
+
 import PopularProduct from '@/components/Organic/PopularProduct'
 import BuyPack from '@/components/Organic/BuyPack'
 import FlashSale from '@/components/Organic/FlashSale'

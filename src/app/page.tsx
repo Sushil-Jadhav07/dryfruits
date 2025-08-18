@@ -5,9 +5,9 @@ import SliderOne from '@/components/Slider/SliderOne'
 import blogData from '@/data/Blog.json'
 
 import WhatNewOne from '@/components/Home1/WhatNewOne'
-import productData from '@/data/Product.json'
+
 import Collection from '@/components/Pet/Collection'
-import TabFeatures from '@/components/Home1/TabFeatures'
+
 import Banner from '@/components/Home5/Banner'
 import Benefit from '@/components/Home1/Benefit'
 import testimonialData from '@/data/Testimonial.json'
@@ -49,7 +49,7 @@ export default function Home() {
       <PopularProduct start={0} limit={8} />
 
 
-      {/* <TabFeatures data={productData} start={0} limit={6} /> */}
+
       <Banner2 />
 
       {/* <Benefit props="md:py-15 py-12" />

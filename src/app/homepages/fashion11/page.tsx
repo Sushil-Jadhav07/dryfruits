@@ -3,7 +3,7 @@ import TopNavOne from '@/components/Header/TopNav/TopNavOne'
 import MenuEleven from '@/components/Header/Menu/MenuEleven'
 import SliderEleven from '@/components/Slider/SliderEleven'
 import TrendingNow from '@/components/Home11/TrendingNow'
-import productData from '@/data/Product.json'
+
 import MenFashion from '@/components/Home11/MenFashion'
 import Banner from '@/components/Home9/Banner'
 import WomenFashion from '@/components/Home11/WomenFashion'
@@ -24,9 +24,9 @@ export default function HomeEleven() {
                 <SliderEleven />
             </div>
             <TrendingNow />
-            <MenFashion data={productData} start={0} limit={3} />
+            {/* <MenFashion data={productData} start={0} limit={3} /> */}
             <Banner />
-            <WomenFashion data={productData} start={0} limit={3} />
+            {/* <WomenFashion data={productData} start={0} limit={3} /> */}
             <Benefit props="md:mt-20 mt-10 py-10 px-2.5 bg-surface rounded-[32px]" />
             <NewsInsight data={blogData} start={0} limit={3} />
             <Brand />
