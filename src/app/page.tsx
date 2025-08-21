@@ -21,7 +21,7 @@ import BannerTop from '@/components/Home3/BannerTop'
 import SliderThree from '@/components/Slider/SliderThree'
 import SliderOrganic from '@/components/Slider/SliderOrganic'
 import Category from '@/components/Organic/Category'
-import PopularProduct from '@/components/Organic/PopularProduct'
+
 import BuyPack from '@/components/Organic/BuyPack'
 import FlashSale from '@/components/Organic/FlashSale'
 import NewsInsight from '@/components/Home3/NewsInsight'
