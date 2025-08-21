@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { useCategories, useProducts } from '@/hooks'
-import { getImageUrl } from '@/lib/sanity'
+import { getImageUrl } from '../../../lib/sanity'
 import type { Category, Product } from '../../../types/sanity'
 
 interface Props {

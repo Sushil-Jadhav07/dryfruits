@@ -3,7 +3,7 @@
 import React from 'react'
 import { useRouter } from 'next/navigation'
 import { useCategoriesWithBrands } from '@/hooks'
-import { getImageUrl } from '@/lib/sanity'
+import { getImageUrl } from '../../../lib/sanity'
 import type { Category } from '../../../types/sanity'
 
 const Category = () => {

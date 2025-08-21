@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { useCategory, useBrands, useProducts } from '@/hooks'
-import { getImageUrl } from '@/lib/sanity'
+import { getImageUrl } from '../../../../lib/sanity'
 import type { Category, Brand, Product } from '../../../../types/sanity'
 import MenuTwo from '@/components/Header/Menu/MenuTwo'
 import Footer from '@/components/Footer/Footer'
