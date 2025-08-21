@@ -193,8 +193,8 @@ const CategoryPage = () => {
                         ) : (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {filteredProducts.map((product) => (
-                                    <Link href={`/product/${product.slug.current}`} >
-                                    <div key={product._id} className="bg-white rounded-lg shadow-md overflow-hidden">
+                                    <Link key={product._id} href={`/product/${product.slug.current}`} >
+                                    <div className="bg-white rounded-lg shadow-md overflow-hidden">
                                         <div className="aspect-w-16 aspect-h-9">
                                             {product.coverImage && product.coverImage.asset && product.coverImage.asset._ref ? (
                                                 <img
