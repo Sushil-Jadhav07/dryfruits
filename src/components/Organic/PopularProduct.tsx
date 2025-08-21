@@ -169,12 +169,12 @@ const PopularProduct: React.FC<Props> = ({ start, limit }) => {
             type: sanityProduct.category?.name || 'Uncategorized',
             name: sanityProduct.name || 'Untitled Product',
             gender: 'unisex',
-            new: sanityProduct.publishedAt ? new Date(sanityProduct.publishedAt) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) : true,
+            new: true, // Always show as new since we don't have publishedAt
             sale: false,
             rate: 5,
             price: sanityProduct.price || 0,
             originPrice: sanityProduct.price || 0,
-            brand: sanityProduct.brand || 'Unknown Brand',
+            brand: sanityProduct.brand?.name || 'Unknown Brand',
             sold: 0,
             quantity: sanityProduct.inStock ? 100 : 0,
             quantityPurchase: 1,
@@ -225,7 +225,7 @@ const PopularProduct: React.FC<Props> = ({ start, limit }) => {
                         {filteredProducts.slice(start, limit).map((prd, index) => {
                             const convertedProduct = convertSanityToProductType(prd);
                             return (
-                                <Product 
+                                <ProductComponent 
                                     data={convertedProduct} 
                                     type='grid' 
                                     key={prd._id || index} 
