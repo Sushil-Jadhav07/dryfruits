@@ -15,8 +15,7 @@ import { useModalSearchContext } from '@/context/ModalSearchContext';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { useRouter } from 'next/navigation';
-import { useCategories, useBrands } from '@/hooks/useSanity';
-import { categoryQueries, brandQueries } from '@/lib/sanity-queries';
+import { useCategories, useBrands } from '@/hooks';
 
 
 const MenuTwo = () => {
@@ -38,8 +37,8 @@ const MenuTwo = () => {
     const [lastScrollPosition, setLastScrollPosition] = useState(0);
 
     // Fetch categories and brands from Sanity
-    const { categories } = useCategories(categoryQueries.getAll);
-    const { brands } = useBrands(brandQueries.getAll);
+    const { data: categories } = useCategories();
+    const { data: brands } = useBrands();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -84,44 +83,7 @@ const MenuTwo = () => {
                             <ul className='flex items-center gap-8 h-full'>
                                
 
-                                {/* Brands */}
-                                <li className='h-full relative'>
-                                    <Link
-                                        href="#!"
-                                        className={`text-button-uppercase duration-300 h-full flex items-center justify-center gap-1 
-                                            ${pathname.includes('/homepages/') ? 'active' : ''}`}
-                                    >
-                                        Brands
-                                    </Link>
-                                    {brands && brands.length > 0 && (
-                                        <div className="sub-menu absolute py-3 px-5 -left-20 w-[300px] grid grid-cols-2 gap-5 bg-white rounded-b-xl shadow-lg">
-                                            <ul>
-                                                {brands.slice(0, Math.ceil(brands.length / 2)).map((brand, index) => (
-                                                    <li key={brand._id}>
-                                                        <Link 
-                                                            href={`/brands/${brand.slug?.current || brand._id}`} 
-                                                            className='text-secondary duration-300 hover:text-black'
-                                                        >
-                                                            {brand.name}
-                                                        </Link>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                            <ul>
-                                                {brands.slice(Math.ceil(brands.length / 2)).map((brand, index) => (
-                                                    <li key={brand._id}>
-                                                        <Link 
-                                                            href={`/brands/${brand.slug?.current || brand._id}`} 
-                                                            className='text-secondary duration-300 hover:text-black'
-                                                        >
-                                                            {brand.name}
-                                                        </Link>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-                                </li>
+
 
 
                                 {/* Categories */}
@@ -139,7 +101,7 @@ const MenuTwo = () => {
                                                 {categories.slice(0, Math.ceil(categories.length / 2)).map((category, index) => (
                                                     <li key={category._id}>
                                                         <Link 
-                                                            href={`/categories/${category.slug?.current || category._id}`} 
+                                                            href={`/category/${category.slug?.current || category._id}`} 
                                                             className='text-secondary duration-300 hover:text-black'
                                                         >
                                                             {category.name}
@@ -151,7 +113,7 @@ const MenuTwo = () => {
                                                 {categories.slice(Math.ceil(categories.length / 2)).map((category, index) => (
                                                     <li key={category._id}>
                                                         <Link 
-                                                            href={`/categories/${category.slug?.current || category._id}`} 
+                                                            href={`/category/${category.slug?.current || category._id}`} 
                                                             className='text-secondary duration-300 hover:text-black'
                                                         >
                                                             {category.name}

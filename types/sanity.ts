@@ -1,10 +1,13 @@
-// Sanity Image type
+// Sanity Asset Types
+export interface SanityAsset {
+  _ref: string
+  _type: string
+}
+
 export interface SanityImage {
-  _type: 'image'
-  asset: {
-    _ref: string
-    _type: 'reference'
-  }
+  asset: SanityAsset
+  alt?: string
+  caption?: string
   hotspot?: {
     x: number
     y: number
@@ -19,89 +22,151 @@ export interface SanityImage {
   }
 }
 
-// Sanity Slug type
+// Sanity Slug Type
 export interface SanitySlug {
   _type: 'slug'
   current: string
 }
 
-// Product type
-export interface SanityProduct {
-  _id: string
-  _type: 'product'
-  name: string
-  slug: SanitySlug
-  description: string
-  coverImage: SanityImage
-  images: SanityImage[]
-  price: number
-  currency: string
-  inStock: boolean
-  featured: boolean
-  tags: string[]
-  publishedAt: string
-  categories: string[] // Array of category names (resolved from references)
-  categorySlugs: string[] // Array of category slugs (resolved from references)
-  brand: string // Brand name (resolved from reference)
-  brandSlug: string // Brand slug (resolved from reference)
+// SEO Type
+export interface SEO {
+  title?: string
+  description?: string
+  keywords?: string[]
+  ogImage?: SanityImage
 }
 
-// Category type
-export interface SanityCategory {
+// Category Type
+export interface Category {
   _id: string
   _type: 'category'
   name: string
   slug: SanitySlug
   description?: string
-  productCount: number
+  image?: SanityImage
+  productCount?: number
+  brands?: Brand[]
 }
 
-// Brand type
-export interface SanityBrand {
+// Brand Type
+export interface Brand {
   _id: string
   _type: 'brand'
   name: string
   slug: SanitySlug
   description?: string
   logo?: SanityImage
-  productCount: number
+  productCount?: number
 }
 
-// Blog post type (if you have blog functionality)
-export interface SanityBlogPost {
+// Product Variant Type
+export interface ProductVariant {
+  _key: string
+  title: string
+  price: number
+  image?: SanityImage
+  sku?: string
+  inStock?: boolean
+}
+
+// Product Type
+export interface Product {
+  _id: string
+  _type: 'product'
+  name: string
+  slug: SanitySlug
+  price: number
+  comparePrice?: number
+  description?: string
+  longDescription?: string
+  coverImage?: SanityImage
+  productImages?: Array<{
+    _key: string
+    asset: SanityAsset
+    alt?: string
+    caption?: string
+  }>
+  category?: Category
+  brand?: Brand
+  variants?: ProductVariant[]
+  tags?: string[]
+  inStock?: boolean
+  featured?: boolean
+  specifications?: Record<string, any>
+  reviews?: Array<{
+    _key: string
+    rating: number
+    comment?: string
+    author?: string
+    date?: string
+  }>
+  seo?: SEO
+  _createdAt?: string
+  _updatedAt?: string
+}
+
+// Author Type
+export interface Author {
+  _id: string
+  _type: 'author'
+  name: string
+  bio?: string
+  image?: SanityImage
+}
+
+// Blog Post Type
+export interface BlogPost {
   _id: string
   _type: 'post'
   title: string
   slug: SanitySlug
-  excerpt: string
-  content: any[] // Portable Text
-  coverImage: SanityImage
-  author: {
-    name: string
-    avatar?: SanityImage
-  }
+  excerpt?: string
+  body?: any // Portable Text
   publishedAt: string
-  tags: string[]
+  author?: Author
+  image?: SanityImage
+  category?: {
+    title: string
+    slug: SanitySlug
+  }
+  tags?: string[]
+  seo?: SEO
 }
 
-// Common query result types
-export type ProductList = SanityProduct[]
-export type CategoryList = SanityCategory[]
-export type BrandList = SanityBrand[]
-export type BlogPostList = SanityBlogPost[]
-
-// Query parameters
-export interface ProductQueryParams {
-  slug?: string
-  categorySlug?: string
-  brandSlug?: string
-  searchTerm?: string
+// Extended Category type with brands for the shop by category feature
+export interface CategoryWithBrands extends Category {
+  brands: Brand[]
 }
 
-export interface CategoryQueryParams {
-  slug?: string
+// Sanity Query Response Types
+export type ProductsResponse = Product[]
+export type CategoriesResponse = Category[]
+export type CategoriesWithBrandsResponse = CategoryWithBrands[]
+export type BrandsResponse = Brand[]
+export type BlogPostsResponse = BlogPost[]
+
+// Utility Types
+export type SanityDocument = Product | Category | Brand | BlogPost | Author
+
+export interface SanityQueryParams {
+  [key: string]: any
 }
 
-export interface BrandQueryParams {
-  slug?: string
-} 
+// Image URL Builder Types
+export interface ImageUrlBuilder {
+  image(source: any): ImageUrlBuilder
+  width(width: number): ImageUrlBuilder
+  height(height: number): ImageUrlBuilder
+  quality(quality: number): ImageUrlBuilder
+  format(format: 'webp' | 'jpg' | 'png'): ImageUrlBuilder
+  url(): string
+}
+
+// Sanity Client Configuration
+export interface SanityConfig {
+  projectId: string
+  dataset: string
+  apiVersion: string
+  useCdn: boolean
+  hasToken: boolean
+}

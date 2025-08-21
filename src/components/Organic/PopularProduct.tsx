@@ -1,13 +1,11 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import Product from '../Product/Product'
+import ProductComponent from '../Product/Product'
 import { ProductType } from '@/type/ProductType'
 import { motion } from 'framer-motion'
-import { useBrands, useProducts } from '@/hooks/useSanity'
-import { brandQueries, productQueries } from '@/lib/sanity-queries'
-import { getImageUrl } from '@/lib/sanity'
-import type { SanityBrand, SanityProduct } from '@/types/sanity'
+import { useBrands, useProducts } from '@/hooks'
+import type { Brand, Product } from '../../../types/sanity'
 
 interface Props {
     start: number;
@@ -16,11 +14,11 @@ interface Props {
 
 const PopularProduct: React.FC<Props> = ({ start, limit }) => {
     const [activeTab, setActiveTab] = useState<string>('all');
-    const [filteredProducts, setFilteredProducts] = useState<SanityProduct[]>([]);
+    const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
     // Fetch brands and products from Sanity
-    const { brands, loading: brandsLoading, error: brandsError } = useBrands(brandQueries.getAll);
-    const { products, loading: productsLoading, error: productsError } = useProducts(productQueries.getAll);
+    const { data: brands, loading: brandsLoading, error: brandsError } = useBrands();
+    const { data: products, loading: productsLoading, error: productsError } = useProducts();
 
     // Update filtered products when active tab or products change
     useEffect(() => {
@@ -36,7 +34,7 @@ const PopularProduct: React.FC<Props> = ({ start, limit }) => {
             } else {
                 // Filter products by brand and show first 5
                 const filtered = products.filter((product) => 
-                    product.brand && product.brand.toLowerCase() === activeTab.toLowerCase()
+                    product.brand && product.brand.name && product.brand.name.toLowerCase() === activeTab.toLowerCase()
                 );
                 console.log(`PopularProduct: Filtered products for ${activeTab}:`, filtered.length);
                 const firstFive = filtered.slice(0, 5);
@@ -111,7 +109,7 @@ const PopularProduct: React.FC<Props> = ({ start, limit }) => {
     }
 
     // Convert Sanity product to ProductType for compatibility
-    const convertSanityToProductType = (sanityProduct: SanityProduct): ProductType => {
+    const convertSanityToProductType = (sanityProduct: Product): ProductType => {
         // Ensure we have valid data before conversion
         if (!sanityProduct || !sanityProduct._id || !sanityProduct.name) {
             console.warn('Invalid Sanity product data:', sanityProduct);

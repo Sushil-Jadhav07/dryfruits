@@ -46,9 +46,9 @@ export default function Home() {
       <WhatNewOne start={0} limit={8} />
 
      
-      <PopularProduct start={0} limit={8} />
+      {/* <PopularProduct start={0} limit={8} /> */}
 
-      <Banner2 />
+ 
 
       {/* <Benefit props="md:py-15 py-12" />
       <Testimonial data={testimonialData} limit={6} /> */}

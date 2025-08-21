@@ -1,266 +1,276 @@
-# Sanity Client Setup Guide
+# Sanity CMS Setup for Dryfruits Frontend
 
-This guide explains how to set up and use the Sanity client in your Next.js project.
+This document outlines the complete Sanity CMS integration setup for the dryfruits frontend application.
 
-## 🚀 Quick Start
+## 🚀 What's Been Set Up
 
-### 1. Environment Variables
+### 1. Core Sanity Client (`lib/sanity.ts`)
+- **Environment-based configuration** - Uses environment variables with fallbacks
+- **Smart CDN usage** - Automatically uses CDN in production
+- **Image optimization utilities** - Multiple image handling functions
+- **Error handling** - Graceful fallbacks for missing images
 
-Copy the `env.example` file to `.env.local` and fill in your Sanity project details:
+### 2. Query Functions (`lib/sanity-queries.ts`)
+- **Product queries** - Get all products, by slug, by category
+- **Category & Brand queries** - Complete category and brand management
+- **Blog queries** - Blog post management
+- **Search functionality** - Product search with multiple criteria
+- **Featured products** - Special queries for featured and sale items
+
+### 3. TypeScript Types (`types/sanity.ts`)
+- **Complete type definitions** for all Sanity document types
+- **Image and asset types** with proper typing
+- **SEO and metadata types** for better content management
+- **Response type aliases** for cleaner code
+
+### 4. React Hooks (`hooks/useSanity.ts`)
+- **Custom hooks** for all major data fetching operations
+- **Loading and error states** built-in
+- **Optimized queries** with proper dependencies
+- **Generic query hook** for custom queries
+
+### 5. Image Components (`components/SanityImage.tsx`)
+- **Optimized image rendering** with WebP support
+- **Responsive images** with multiple breakpoints
+- **Background image support** for hero sections
+- **Fallback handling** for missing images
+
+## 📋 Environment Variables
+
+Create a `.env.local` file in your project root with:
 
 ```bash
-cp env.example .env.local
-```
-
-Edit `.env.local` with your actual values:
-
-```env
-NEXT_PUBLIC_SANITY_PROJECT_ID=your-actual-project-id
+# Required
+NEXT_PUBLIC_SANITY_PROJECT_ID=your-project-id
 NEXT_PUBLIC_SANITY_DATASET=production
 NEXT_PUBLIC_SANITY_API_VERSION=2024-01-01
-SANITY_API_TOKEN=your-actual-api-token
+
+# Optional (for write operations)
+SANITY_API_TOKEN=your-api-token
+
+# Optional (for studio links)
+NEXT_PUBLIC_SANITY_STUDIO_URL=https://your-project.sanity.studio
 ```
 
-### 2. Get Your Sanity Project Details
-
-1. Go to [sanity.io](https://sanity.io) and sign in
-2. Select your project (or create a new one)
-3. Go to **Settings** → **API**
-4. Copy your **Project ID** and **Dataset**
-5. Create a new **API Token** if you need write access
-
-## 📁 File Structure
-
-```
-dryfruits/
-├── lib/
-│   ├── sanity.ts          # Sanity client configuration
-│   └── sanity-queries.ts  # GROQ queries and helper functions
-├── types/
-│   └── sanity.ts          # TypeScript type definitions
-├── hooks/
-│   └── useSanity.ts       # React hooks for data fetching
-└── env.example            # Environment variables template
-```
-
-## 🔧 Usage Examples
+## 🎯 How to Use
 
 ### Basic Product Fetching
 
 ```tsx
-import { useProducts } from '../hooks/useSanity'
-import { productQueries } from '../lib/sanity-queries'
+import { useProducts, useProduct } from '../hooks/useSanity'
 
+// Fetch all products
 function ProductList() {
-  const { products, loading, error } = useProducts(productQueries.getAll)
-
+  const { data: products, loading, error } = useProducts()
+  
   if (loading) return <div>Loading...</div>
   if (error) return <div>Error: {error}</div>
-
+  
   return (
     <div>
-      {products.map(product => (
+      {products?.map(product => (
         <div key={product._id}>
-          <h3>{product.name}</h3>
+          <h3>{product.title}</h3>
           <p>${product.price}</p>
         </div>
       ))}
     </div>
   )
 }
-```
 
-### Fetching Featured Products
-
-```tsx
-import { useProducts } from '../hooks/useSanity'
-import { productQueries } from '../lib/sanity-queries'
-
-function FeaturedProducts() {
-  const { products, loading, error } = useProducts(productQueries.getFeatured)
-
+// Fetch single product
+function ProductDetail({ slug }: { slug: string }) {
+  const { data: product, loading, error } = useProduct(slug)
+  
   if (loading) return <div>Loading...</div>
   if (error) return <div>Error: {error}</div>
-
+  
   return (
     <div>
-      <h2>Featured Products</h2>
-      {products.map(product => (
-        <div key={product._id}>
-          <h3>{product.name}</h3>
-          <p>${product.price}</p>
-        </div>
-      ))}
+      <h1>{product?.title}</h1>
+      <p>{product?.description}</p>
     </div>
   )
 }
 ```
 
-### Single Product Page
+### Using Sanity Images
 
 ```tsx
-import { useProduct } from '../hooks/useSanity'
-import { getImageUrl } from '../lib/sanity'
+import SanityImage from '../components/SanityImage'
 
-function ProductPage({ slug }: { slug: string }) {
-  const { product, loading, error } = useProduct(slug)
-
-  if (loading) return <div>Loading...</div>
-  if (error) return <div>Error: {error}</div>
-  if (!product) return <div>Product not found</div>
-
+function ProductCard({ product }: { product: Product }) {
   return (
     <div>
-      <h1>{product.name}</h1>
-      <img 
-        src={getImageUrl(product.coverImage, 600, 400)} 
-        alt={product.name} 
+      <SanityImage
+        image={product.image}
+        alt={product.title}
+        width={400}
+        height={400}
+        quality={85}
+        format="webp"
+        className="rounded-lg"
       />
-      <p>{product.description}</p>
-      <p>${product.price}</p>
-      <p>Category: {product.category}</p>
-      <p>Brand: {product.brand}</p>
+      <h3>{product.title}</h3>
     </div>
   )
 }
-```
 
-### Product Search
-
-```tsx
-import { useState } from 'react'
-import { useProductSearch } from '../hooks/useSanity'
-
-function ProductSearch() {
-  const [searchTerm, setSearchTerm] = useState('')
-  const { products, loading, error } = useProductSearch(searchTerm)
-
+// Responsive images
+function HeroSection({ image }: { image: SanityImage }) {
   return (
-    <div>
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder="Search products..."
-      />
-      
-      {loading && <div>Searching...</div>}
-      {error && <div>Error: {error}</div>}
-      
-      <div>
-        {products.map(product => (
-          <div key={product._id}>
-            <h3>{product.name}</h3>
-            <p>${product.price}</p>
-          </div>
-        ))}
-      </div>
-    </div>
+    <ResponsiveSanityImage
+      image={image}
+      breakpoints={[400, 800, 1200, 1600]}
+      alt="Hero image"
+      className="w-full h-96"
+    />
+  )
+}
+
+// Background images
+function HeroBackground({ image }: { image: SanityImage }) {
+  return (
+    <BackgroundSanityImage
+      image={image}
+      className="min-h-screen flex items-center justify-center"
+    >
+      <h1 className="text-white text-6xl">Welcome</h1>
+    </BackgroundSanityImage>
   )
 }
 ```
 
-## 🖼️ Image Handling
-
-The setup includes utilities for handling Sanity images:
+### Custom Queries
 
 ```tsx
-import { getImageUrl, getResponsiveImageUrls } from '../lib/sanity'
+import { useSanityQuery } from '../hooks/useSanity'
 
-// Get image with specific dimensions
-const imageUrl = getImageUrl(product.coverImage, 600, 400)
-
-// Get responsive image URLs
-const responsiveUrls = getResponsiveImageUrls(product.coverImage, [300, 600, 900])
-
-// Use in Next.js Image component
-import Image from 'next/image'
-
-<Image
-  src={getImageUrl(product.coverImage, 600, 400)}
-  alt={product.name}
-  width={600}
-  height={400}
-/>
+function CustomProductList() {
+  const query = `
+    *[_type == "product" && price < 100] | order(price asc) {
+      _id,
+      title,
+      price,
+      "image": {
+        "asset": {
+          "_ref": image.asset._ref,
+          "_type": image.asset._type
+        },
+        "alt": image.alt
+      }
+    }
+  `
+  
+  const { data: products, loading, error } = useSanityQuery(query)
+  
+  // ... rest of component
+}
 ```
 
-## 🔍 Available Queries
+### Direct Client Usage
 
-### Product Queries
-- `productQueries.getAll` - All products
-- `productQueries.getFeatured` - Featured products only
-- `productQueries.getBySlug` - Single product by slug
-- `productQueries.getByCategory` - Products by category
-- `productQueries.getByBrand` - Products by brand
-- `productQueries.search` - Search products
+```tsx
+import { client } from '../lib/sanity'
 
-### Category Queries
-- `categoryQueries.getAll` - All categories
-- `categoryQueries.getBySlug` - Single category by slug
+// For server-side operations or complex queries
+export async function getServerSideProps() {
+  const products = await client.fetch(`
+    *[_type == "product" && featured == true][0...6] {
+      _id,
+      title,
+      price,
+      image
+    }
+  `)
+  
+  return {
+    props: { products }
+  }
+}
+```
 
-### Brand Queries
-- `brandQueries.getAll` - All brands
-- `brandQueries.getBySlug` - Single brand by slug
+## 🔧 Available Hooks
 
-## 🎣 Available Hooks
+| Hook | Description | Returns |
+|------|-------------|---------|
+| `useProducts()` | All products | `ProductsResponse` |
+| `useProduct(slug)` | Single product by slug | `Product` |
+| `useCategories()` | All categories | `CategoriesResponse` |
+| `useCategory(slug)` | Single category by slug | `Category` |
+| `useBrands()` | All brands | `BrandsResponse` |
+| `useBlogPosts()` | All blog posts | `BlogPostsResponse` |
+| `useBlogPost(slug)` | Single blog post by slug | `BlogPost` |
+| `useFeaturedProducts(limit)` | Featured products | `ProductsResponse` |
+| `useProductsOnSale(limit)` | Products on sale | `ProductsResponse` |
+| `useProductSearch(term)` | Search products | `ProductsResponse` |
 
-- `useProducts(query, params)` - Fetch products with custom query
-- `useCategories(query, params)` - Fetch categories with custom query
-- `useBrands(query, params)` - Fetch brands with custom query
-- `useProduct(slug)` - Fetch single product
-- `useCategory(slug)` - Fetch single category
-- `useBrand(slug)` - Fetch single brand
-- `useProductSearch(searchTerm)` - Search products with debouncing
+## 🖼️ Image Utilities
+
+| Function | Description |
+|----------|-------------|
+| `urlFor(source)` | Basic image URL builder |
+| `getImageUrl(source, width, height)` | Image with dimensions |
+| `getOptimizedImageUrl(source, width, height, quality, format)` | Optimized image |
+| `getResponsiveImageUrls(source, breakpoints)` | Multiple sizes for responsive images |
+
+## 📱 Image Components
+
+| Component | Use Case |
+|-----------|----------|
+| `SanityImage` | Standard product/category images |
+| `ResponsiveSanityImage` | Responsive images with multiple breakpoints |
+| `BackgroundSanityImage` | Hero sections and backgrounds |
 
 ## 🚨 Error Handling
 
 All hooks include built-in error handling:
 
 ```tsx
-const { products, loading, error } = useProducts(productQueries.getAll)
+const { data, loading, error } = useProducts()
 
-if (error) {
-  console.error('Error:', error)
-  return <div>Something went wrong. Please try again later.</div>
-}
+if (loading) return <LoadingSpinner />
+if (error) return <ErrorMessage error={error} />
+if (!data) return <NoDataMessage />
+
+// Safe to use data here
+return <ProductList products={data} />
 ```
 
-## 🔒 Security Notes
+## 🔍 Debugging
 
-- `SANITY_API_TOKEN` is only needed for write operations
-- The token should be kept secret and not committed to version control
-- Public queries (read-only) don't require authentication
-- Use environment variables for all sensitive configuration
+Export the `sanityConfig` from `lib/sanity.ts` to debug configuration:
 
-## 📚 Additional Resources
+```tsx
+import { sanityConfig } from '../lib/sanity'
 
-- [Sanity Documentation](https://www.sanity.io/docs)
-- [GROQ Query Language](https://www.sanity.io/docs/groq)
-- [Sanity Image URLs](https://www.sanity.io/docs/image-url)
-- [Next.js Environment Variables](https://nextjs.org/docs/basic-features/environment-variables)
+console.log('Sanity Config:', sanityConfig)
+// Outputs: { projectId, dataset, apiVersion, useCdn, hasToken }
+```
+
+## 📚 Next Steps
+
+1. **Set up your Sanity Studio** with the schema types matching the TypeScript interfaces
+2. **Create content** in your Sanity Studio
+3. **Test the queries** using the provided hooks
+4. **Customize the queries** based on your specific content structure
+5. **Add more image optimization** as needed for your use case
 
 ## 🆘 Troubleshooting
 
 ### Common Issues
 
-1. **"Project not found" error**
-   - Check your `NEXT_PUBLIC_SANITY_PROJECT_ID` in `.env.local`
-   - Ensure the project ID is correct and the project exists
-
-2. **"Dataset not found" error**
-   - Verify your `NEXT_PUBLIC_SANITY_DATASET` value
-   - Default dataset is usually "production"
-
-3. **Images not loading**
-   - Check that your Sanity project has CORS configured
-   - Ensure image assets are properly uploaded to Sanity
-
-4. **TypeScript errors**
-   - Make sure all imports are correct
-   - Check that the types match your actual Sanity schema
+1. **Images not loading**: Check if the image asset reference exists in Sanity
+2. **Type errors**: Ensure your Sanity schema matches the TypeScript interfaces
+3. **Query errors**: Verify GROQ syntax and field references
+4. **Environment variables**: Make sure `.env.local` is properly configured
 
 ### Getting Help
 
-- Check the [Sanity Discord](https://discord.gg/sanity-io)
-- Review [Sanity GitHub issues](https://github.com/sanity-io/sanity/issues)
-- Check the [Next.js documentation](https://nextjs.org/docs) 
+- Check Sanity documentation: https://www.sanity.io/docs
+- Review GROQ query syntax: https://www.sanity.io/docs/groq
+- Check the Sanity Studio for content structure
+
+---
+
+This setup provides a solid foundation for building a content-driven e-commerce frontend with Sanity CMS. All components are optimized for performance and include proper error handling.

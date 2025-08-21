@@ -1,211 +1,457 @@
 import { useState, useEffect } from 'react'
-import { client } from '../lib/sanity'
-import { productQueries, categoryQueries, brandQueries } from '../lib/sanity-queries'
+import {client} from '@/lib/sanity'
 import type { 
-  SanityProduct, 
-  SanityCategory, 
-  SanityBrand, 
-  ProductList, 
-  CategoryList, 
-  BrandList 
-} from '../types/sanity'
+  Product, 
+  Category, 
+  Brand, 
+  BlogPost,
+  ProductsResponse,
+  CategoriesResponse,
+  CategoriesWithBrandsResponse,
+  BrandsResponse,
+  BlogPostsResponse
+} from '../../types/sanity'
 
-// Hook for fetching products
-export function useProducts(query: string, params?: any) {
-  const [products, setProducts] = useState<ProductList>([])
+// Generic hook for any Sanity query
+export function useSanityQuery<T>(
+  query: string,
+  params?: Record<string, any>,
+  dependencies: any[] = []
+) {
+  const [data, setData] = useState<T | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    async function fetchData() {
+    let isMounted = true
+
+    const fetchData = async () => {
       try {
         setLoading(true)
         setError(null)
-        const data = await client.fetch(query, params)
-        setProducts(data)
+        
+        const result = await client.fetch(query, params)
+        
+        if (isMounted) {
+          setData(result)
+        }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch products')
-        console.error('Error fetching products:', err)
+        if (isMounted) {
+          setError(err instanceof Error ? err.message : 'An error occurred')
+        }
       } finally {
-        setLoading(false)
+        if (isMounted) {
+          setLoading(false)
+        }
       }
     }
 
     fetchData()
-  }, [query, JSON.stringify(params)])
 
-  return { products, loading, error }
-}
-
-// Hook for fetching categories
-export function useCategories(query: string, params?: any) {
-  const [categories, setCategories] = useState<CategoryList>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setLoading(true)
-        setError(null)
-        const data = await client.fetch(query, params)
-        setCategories(data)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch categories')
-        console.error('Error fetching categories:', err)
-      } finally {
-        setLoading(false)
-      }
+    return () => {
+      isMounted = false
     }
+  }, dependencies)
 
-    fetchData()
-  }, [query, JSON.stringify(params)])
-
-  return { categories, loading, error }
+  return { data, loading, error }
 }
 
-// Hook for fetching brands
-export function useBrands(query: string, params?: any) {
-  const [brands, setBrands] = useState<BrandList>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setLoading(true)
-        setError(null)
-        const data = await client.fetch(query, params)
-        setBrands(data)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch brands')
-        console.error('Error fetching brands:', err)
-      } finally {
-        setLoading(false)
-      }
+// Specific hooks for common queries
+export function useProducts() {
+  const query = `
+    *[_type == "product"] {
+      _id,
+      _type,
+      name,
+      slug,
+      price,
+      comparePrice,
+      description,
+      "coverImage": {
+        "asset": {
+          "_ref": coverImage.asset._ref,
+          "_type": coverImage.asset._type
+        },
+        "alt": coverImage.alt,
+        "caption": coverImage.caption
+      },
+      category->{
+        _id,
+        name,
+        slug
+      },
+      brand->{
+        _id,
+        name,
+        slug
+      },
+      inStock,
+      featured
     }
-
-    fetchData()
-  }, [query, JSON.stringify(params)])
-
-  return { brands, loading, error }
+  `
+  
+  return useSanityQuery<ProductsResponse>(query)
 }
 
-// Hook for fetching a single product by slug
 export function useProduct(slug: string) {
-  const [product, setProduct] = useState<SanityProduct | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (!slug) return
-
-    async function fetchProduct() {
-      try {
-        setLoading(true)
-        setError(null)
-        const data = await client.fetch(productQueries.getBySlug, { slug })
-        setProduct(data)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch product')
-        console.error('Error fetching product:', err)
-      } finally {
-        setLoading(false)
+  const query = `
+    *[_type == "product" && slug.current == $slug][0] {
+      _id,
+      _type,
+      name,
+      slug,
+      price,
+      comparePrice,
+      description,
+      longDescription,
+      "coverImage": {
+        "asset": {
+          "_ref": coverImage.asset._ref,
+          "_type": coverImage.asset._type
+        },
+        "alt": coverImage.alt,
+        "caption": coverImage.caption
+      },
+      "productImages": productImages[]{
+        _key,
+        "asset": {
+          "_ref": asset._ref,
+          "_type": asset._type
+        },
+        "alt": alt,
+        "caption": caption
+      },
+      category->{
+        _id,
+        name,
+        slug
+      },
+      brand->{
+        _id,
+        name,
+        slug
+      },
+      variants[]{
+        _key,
+        title,
+        price,
+        "image": {
+          "asset": {
+            "_ref": image.asset._ref,
+            "_type": image.asset._type
+          },
+          "alt": image.alt,
+          "caption": image.caption
+        }
+      },
+      tags,
+      inStock,
+      featured,
+      specifications,
+      reviews[]{
+        _key,
+        rating,
+        comment,
+        author,
+        date
       }
     }
-
-    fetchProduct()
-  }, [slug])
-
-  return { product, loading, error }
+  `
+  
+  return useSanityQuery<Product>(query, { slug }, [slug])
 }
 
-// Hook for fetching a single category by slug
+export function useCategories() {
+  const query = `
+    *[_type == "category"] {
+      _id,
+      name,
+      slug,
+      description,
+      "image": {
+        "asset": {
+          "_ref": image.asset._ref,
+          "_type": image.asset._type
+        },
+        "alt": image.alt,
+        "caption": image.caption
+      },
+      "productCount": count(*[_type == "product" && references(^._id)])
+    }
+  `
+  
+  return useSanityQuery<CategoriesResponse>(query)
+}
+
+// New hook for categories with their brands
+export function useCategoriesWithBrands() {
+  const query = `
+    *[_type == "category"] {
+      _id,
+      name,
+      slug,
+      description,
+      "image": {
+        "asset": {
+          "_ref": image.asset._ref,
+          "_type": image.asset._type
+        },
+        "alt": image.alt,
+        "caption": image.caption
+      },
+      "brands": *[_type == "brand" && references(^._id)] {
+        _id,
+        name,
+        slug,
+        description,
+        "logo": {
+          "asset": {
+            "_ref": logo.asset._ref,
+            "_type": logo.asset._type
+          },
+          "alt": logo.alt,
+          "caption": logo.caption
+        },
+        "productCount": count(*[_type == "product" && references(^._id)])
+      },
+      "productCount": count(*[_type == "product" && references(^._id)])
+    }
+  `
+  
+  return useSanityQuery<CategoriesWithBrandsResponse>(query)
+}
+
 export function useCategory(slug: string) {
-  const [category, setCategory] = useState<SanityCategory | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (!slug) return
-
-    async function fetchCategory() {
-      try {
-        setLoading(true)
-        setError(null)
-        const data = await client.fetch(categoryQueries.getBySlug, { slug })
-        setCategory(data)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch category')
-        console.error('Error fetching category:', err)
-      } finally {
-        setLoading(false)
+  const query = `
+    *[_type == "category" && slug.current == $slug][0] {
+      _id,
+      name,
+      slug,
+      description,
+      "image": {
+        "asset": {
+          "_ref": image.asset._ref,
+          "_type": image.asset._type
+        },
+        "alt": image.alt,
+        "caption": image.caption
       }
     }
-
-    fetchCategory()
-  }, [slug])
-
-  return { category, loading, error }
+  `
+  
+  return useSanityQuery<Category>(query, { slug }, [slug])
 }
 
-// Hook for fetching a single brand by slug
-export function useBrand(slug: string) {
-  const [brand, setBrand] = useState<SanityBrand | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+export function useBrands() {
+  const query = `
+    *[_type == "brand"] {
+      _id,
+      name,
+      slug,
+      description,
+      "logo": {
+        "asset": {
+          "_ref": logo.asset._ref,
+          "_type": logo.asset._type
+        },
+        "alt": logo.alt,
+        "caption": logo.caption
+      },
+      "productCount": count(*[_type == "product" && references(^._id)])
+    }
+  `
+  
+  return useSanityQuery<BrandsResponse>(query)
+}
 
-  useEffect(() => {
-    if (!slug) return
-
-    async function fetchBrand() {
-      try {
-        setLoading(true)
-        setError(null)
-        const data = await client.fetch(brandQueries.getBySlug, { slug })
-        setBrand(data)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch brand')
-        console.error('Error fetching brand:', err)
-      } finally {
-        setLoading(false)
+export function useBlogPosts() {
+  const query = `
+    *[_type == "post"] | order(publishedAt desc) {
+      _id,
+      title,
+      slug,
+      excerpt,
+      publishedAt,
+      author->{
+        name,
+        "image": {
+          "asset": {
+            "_ref": image.asset._ref,
+            "_type": image.asset._type
+          },
+          "alt": image.alt,
+          "caption": image.caption
+        }
+      },
+      "image": {
+        "asset": {
+          "_ref": image.asset._ref,
+          "_type": image.asset._type
+        },
+        "alt": image.alt,
+        "caption": image.caption
+      },
+      category->{
+        title,
+        slug
       }
     }
-
-    fetchBrand()
-  }, [slug])
-
-  return { brand, loading, error }
+  `
+  
+  return useSanityQuery<BlogPostsResponse>(query)
 }
 
-// Hook for searching products
+export function useBlogPost(slug: string) {
+  const query = `
+    *[_type == "post" && slug.current == $slug][0] {
+      _id,
+      title,
+      slug,
+      excerpt,
+      body,
+      publishedAt,
+      author->{
+        name,
+        bio,
+        "image": {
+          "asset": {
+            "_ref": image.asset._ref,
+            "_type": image.asset._type
+          },
+          "alt": image.alt,
+          "caption": image.caption
+        }
+      },
+      "image": {
+        "asset": {
+          "_ref": image.asset._ref,
+          "_type": image.asset._type
+        },
+        "alt": image.alt,
+        "caption": image.caption
+      },
+      category->{
+        title,
+        slug
+      },
+      tags
+    }
+  `
+  
+  return useSanityQuery<BlogPost>(query, { slug }, [slug])
+}
+
+export function useFeaturedProducts(limit: number = 8) {
+  const query = `
+    *[_type == "product" && featured == true] | order(_createdAt desc)[0...$limit] {
+      _id,
+      _type,
+      title,
+      slug,
+      price,
+      comparePrice,
+      description,
+      "image": {
+        "asset": {
+          "_ref": image.asset._ref,
+          "_type": image.asset._type
+        },
+        "alt": image.alt,
+        "caption": image.caption
+      },
+      category->{
+        _id,
+        title,
+        slug
+      },
+      brand->{
+        _id,
+        title,
+        slug
+      },
+      inStock
+    }
+  `
+  
+  return useSanityQuery<ProductsResponse>(query, { limit }, [limit])
+}
+
+export function useProductsOnSale(limit: number = 8) {
+  const query = `
+    *[_type == "product" && defined(comparePrice) && comparePrice > price] | order(price asc)[0...$limit] {
+      _id,
+      _type,
+      title,
+      slug,
+      price,
+      comparePrice,
+      description,
+      "image": {
+        "asset": {
+          "_ref": image.asset._ref,
+          "_type": image.asset._type
+        },
+        "alt": image.alt,
+        "caption": image.caption
+      },
+      category->{
+        _id,
+        title,
+        slug
+      },
+      brand->{
+        _id,
+        title,
+        slug
+      },
+      inStock
+    }
+  `
+  
+  return useSanityQuery<ProductsResponse>(query, { limit }, [limit])
+}
+
+// Hook for search functionality
 export function useProductSearch(searchTerm: string) {
-  const [products, setProducts] = useState<ProductList>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (!searchTerm || searchTerm.length < 2) {
-      setProducts([])
-      return
+  const query = `
+    *[_type == "product" && (
+      title match $searchTerm + "*" ||
+      description match $searchTerm + "*" ||
+      tags[] match $searchTerm + "*"
+    )] {
+      _id,
+      _type,
+      title,
+      slug,
+      price,
+      comparePrice,
+      description,
+      "image": {
+        "asset": {
+          "_ref": image.asset._ref,
+          "_type": image.asset._type
+        },
+        "alt": image.alt,
+        "caption": image.caption
+      },
+      category->{
+        _id,
+        title,
+        slug
+      },
+      brand->{
+        _id,
+        title,
+        slug
+      },
+      inStock,
+      featured
     }
-
-    const timeoutId = setTimeout(async () => {
-      try {
-        setLoading(true)
-        setError(null)
-        const data = await client.fetch(productQueries.search, { searchTerm })
-        setProducts(data)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to search products')
-        console.error('Error searching products:', err)
-      } finally {
-        setLoading(false)
-      }
-    }, 300) // Debounce search
-
-    return () => clearTimeout(timeoutId)
-  }, [searchTerm])
-
-  return { products, loading, error }
-} 
+  `
+  
+  return useSanityQuery<ProductsResponse>(
+    query, 
+    { searchTerm }, 
+    [searchTerm]
+  )
+}
