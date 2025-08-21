@@ -5,6 +5,7 @@ import ProductComponent from '../Product/Product'
 import { ProductType } from '@/type/ProductType'
 import { motion } from 'framer-motion'
 import { useBrands, useProducts } from '@/hooks'
+import { getImageUrl } from '../../../lib/sanity'
 import type { Brand, Product } from '../../../types/sanity'
 
 interface Props {
@@ -158,14 +159,14 @@ const PopularProduct: React.FC<Props> = ({ start, limit }) => {
         };
 
         const coverImageUrl = getSafeImageUrl(sanityProduct.coverImage, 300, 400);
-        const imageUrls = sanityProduct.images && sanityProduct.images.length > 0 
-            ? sanityProduct.images.map((img: any) => getSafeImageUrl(img, 300, 400))
+        const imageUrls = sanityProduct.productImages && sanityProduct.productImages.length > 0 
+            ? sanityProduct.productImages.map((img: any) => getSafeImageUrl(img, 300, 400))
             : [coverImageUrl];
 
         return {
             id: sanityProduct._id || '',
-            category: sanityProduct.categories && sanityProduct.categories.length > 0 ? sanityProduct.categories[0] : 'Uncategorized',
-            type: sanityProduct.categories && sanityProduct.categories.length > 0 ? sanityProduct.categories[0] : 'Uncategorized',
+            category: sanityProduct.category?.name || 'Uncategorized',
+            type: sanityProduct.category?.name || 'Uncategorized',
             name: sanityProduct.name || 'Untitled Product',
             gender: 'unisex',
             new: sanityProduct.publishedAt ? new Date(sanityProduct.publishedAt) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) : true,
