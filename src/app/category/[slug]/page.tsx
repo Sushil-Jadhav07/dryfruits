@@ -15,7 +15,6 @@ const CategoryPage = () => {
     const categorySlug = params.slug as string
     
     const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null)
-    const [showProducts, setShowProducts] = useState(true) // Always show products by default
 
     // Fetch category by slug
     const { data: category, loading: categoryLoading, error: categoryError } = useCategory(categorySlug)
@@ -56,7 +55,29 @@ const CategoryPage = () => {
 
     // Auto-select first brand when brands are loaded
     useEffect(() => {
-        const categoryBrands = getCategoryBrands()
+        if (!allBrands || !category) return
+        
+        let categoryBrands: Brand[] = []
+        
+        // First, check if the category has brands directly associated with it
+        if (category.brands && category.brands.length > 0) {
+            categoryBrands = category.brands
+        } else {
+            // Fallback: Get brands that have products in this category
+            if (products) {
+                const categoryBrandIds = new Set(
+                    products
+                        .filter(product => 
+                            product.category && product.category._id === category._id
+                        )
+                        .map(product => product.brand?._id)
+                        .filter(Boolean)
+                )
+                
+                categoryBrands = allBrands.filter(brand => categoryBrandIds.has(brand._id))
+            }
+        }
+        
         if (categoryBrands.length > 0 && !selectedBrand) {
             setSelectedBrand(categoryBrands[0])
         }
@@ -88,12 +109,6 @@ const CategoryPage = () => {
     }
 
     const filteredProducts = getFilteredProducts()
-    
-    // Debug logging
-    console.log('Category data:', category)
-    console.log('All brands:', allBrands)
-    console.log('Category brands:', getCategoryBrands())
-    console.log('Products:', products)
 
     if (categoryLoading) {
         return (
@@ -226,15 +241,17 @@ const CategoryPage = () => {
                                 </svg>
                             </div>
                             <p className="text-gray-500 text-lg">No brands available in this category</p>
-                            <p className="text-gray-400 text-sm mt-2">This category doesn't have any associated brands yet.</p>
+                            <p className="text-gray-400 text-sm mt-2">This category doesn&apos;t have any associated brands yet.</p>
                             <p className="text-gray-400 text-sm mt-1">Please check back later or contact support.</p>
                         </div>
                     )}
                 </div>
 
-                                {/* Products View - Only show if there are brands */}
+                {/* Products View - Only show if there are brands */}
                 {getCategoryBrands().length === 0 && !brandsLoading && !productsLoading ? (
-                    <div className="text-center">
+                    <div className="text-center py-12">
+                      
+                        <p className="text-gray-500 text-lg">No Products available in this category</p>
                        
                     </div>
                 ) : !selectedBrand && (brandsLoading || productsLoading) ? (
@@ -263,41 +280,41 @@ const CategoryPage = () => {
                                     </svg>
                                 </div>
                                 <p className="text-gray-500 text-lg">No products found for {selectedBrand.name}</p>
-                                <p className="text-gray-400 text-sm mt-2">This brand doesn't have any products in the {category.name} category yet.</p>
+                                <p className="text-gray-400 text-sm mt-2">This brand doesn&apos;t have any products in the {category.name} category yet.</p>
                                 <p className="text-gray-400 text-sm mt-1">Try selecting a different brand or check back later.</p>
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {filteredProducts.map((product) => (
-                                    <Link key={product._id} href={`/product/${product.slug.current}`} >
-                                    <div className="bg-white overflow-hidden">
-                                        <div className="aspect-w-16 aspect-h-full">
-                                            {product.coverImage && product.coverImage.asset && product.coverImage.asset._ref ? (
-                                                <picture>
-                                                    <source
-                                                        srcSet={getAvifImageUrl(product.coverImage, 400, 400, 85)}
-                                                        type="image/avif"
-                                                    />
-                                                    <img
-                                                        src={getImageUrl(product.coverImage, 400, 400)}
-                                                        alt={product.name}
-                                                        className="w-full h-full object-cover"
-                                                        onError={(e) => {
-                                                            console.warn('Failed to load product image:', product.coverImage)
-                                                            e.currentTarget.style.display = 'none'
-                                                            e.currentTarget.nextElementSibling?.classList.remove('hidden')
-                                                        }}
-                                                    />
-                                                </picture>
-                                            ) : null}
-                                            <div className={`w-full h-64 bg-gray-200 flex items-center justify-center ${product.coverImage && product.coverImage.asset && product.coverImage.asset._ref ? 'hidden' : ''}`}>
-                                                <span className="text-gray-500">No Image</span>
+                                    <Link key={product._id} href={`/product/${product.slug.current}`}>
+                                        <div className="bg-white overflow-hidden">
+                                            <div className="aspect-w-16 aspect-h-full">
+                                                {product.coverImage && product.coverImage.asset && product.coverImage.asset._ref ? (
+                                                    <picture>
+                                                        <source
+                                                            srcSet={getAvifImageUrl(product.coverImage, 400, 400, 85)}
+                                                            type="image/avif"
+                                                        />
+                                                        <img
+                                                            src={getImageUrl(product.coverImage, 400, 400)}
+                                                            alt={product.name}
+                                                            className="w-full h-full object-cover"
+                                                            onError={(e) => {
+                                                                console.warn('Failed to load product image:', product.coverImage)
+                                                                e.currentTarget.style.display = 'none'
+                                                                e.currentTarget.nextElementSibling?.classList.remove('hidden')
+                                                            }}
+                                                        />
+                                                    </picture>
+                                                ) : null}
+                                                <div className={`w-full h-64 bg-gray-200 flex items-center justify-center ${product.coverImage && product.coverImage.asset && product.coverImage.asset._ref ? 'hidden' : ''}`}>
+                                                    <span className="text-gray-500">No Image</span>
                                                 </div>
+                                            </div>
+                                            <div className="p-4">
+                                                <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
+                                            </div>
                                         </div>
-                                        <div className="p-4">
-                                            <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
-                                        </div>
-                                    </div>
                                     </Link>
                                 ))}
                             </div>
