@@ -15,8 +15,8 @@ const serverTimeLeft: CountdownTimeType = countdownTime();
 const instrument = Instrument_Sans({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Anvogue',
-  description: 'Multipurpose eCommerce Template',
+  title: 'Luxera World',
+  description: 'THis is the Luxura World',
 }
 
 export default function RootLayout({
