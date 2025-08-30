@@ -26,6 +26,34 @@ const CategoryPage = () => {
     // Fetch all products for filtering
     const { data: products, loading: productsLoading, error: productsError } = useProducts()
 
+    // Filter brands that have products in the current category
+    const getCategoryBrands = () => {
+        if (!allBrands || !category) return []
+        
+        let categoryBrands: Brand[] = []
+        
+        // First, check if the category has brands directly associated with it
+        if (category.brands && category.brands.length > 0) {
+            categoryBrands = category.brands
+        } else {
+            // Fallback: Get brands that have products in this category
+            if (products) {
+                const categoryBrandIds = new Set(
+                    products
+                        .filter(product => 
+                            product.category && product.category._id === category._id
+                        )
+                        .map(product => product.brand?._id)
+                        .filter(Boolean)
+                )
+                
+                categoryBrands = allBrands.filter(brand => categoryBrandIds.has(brand._id))
+            }
+        }
+        
+        return categoryBrands
+    }
+
     // Filter products based on selected category and brand
     const getFilteredProducts = () => {
         if (!products || !category) return []
@@ -58,6 +86,12 @@ const CategoryPage = () => {
     }
 
     const filteredProducts = getFilteredProducts()
+    
+    // Debug logging
+    console.log('Category data:', category)
+    console.log('All brands:', allBrands)
+    console.log('Category brands:', getCategoryBrands())
+    console.log('Products:', products)
 
     if (categoryLoading) {
         return (
@@ -105,29 +139,29 @@ const CategoryPage = () => {
                 {/* Navigation Breadcrumb */}
                 
 
-                {/* Category Image */}
+               
                 
 
                 {/* Brands View */}
                 {!showProducts && (
                     <div>
                         <div className="text-center mb-8">
-                            <h2 className="text-2xl font-semibold mb-2">All Brands</h2>
-                          
+                            <h2 className="text-2xl font-semibold mb-2">Brands in {category.name}</h2>
+                         
                         </div>
                         
-                        {brandsLoading ? (
+                        {(brandsLoading || productsLoading) ? (
                             <div className="text-center py-8">
                                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
                                 <p className="mt-4 text-gray-600">Loading brands...</p>
                             </div>
-                        ) : brandsError ? (
+                        ) : (brandsError || productsError) ? (
                             <div className="text-center py-8">
-                                <p className="text-red-600">Error loading brands: {brandsError}</p>
+                                <p className="text-red-600">Error loading data: {brandsError || productsError}</p>
                             </div>
-                        ) : allBrands && allBrands.length > 0 ? (
+                        ) : getCategoryBrands().length > 0 ? (
                             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                                {allBrands.map((brand) => (
+                                {getCategoryBrands().map((brand) => (
                                     <div
                                         key={brand._id}
                                         onClick={() => handleBrandClick(brand)}
@@ -157,7 +191,8 @@ const CategoryPage = () => {
                             </div>
                         ) : (
                             <div className="text-center py-8">
-                                <p className="text-gray-500 text-lg">No brands available.</p>
+                                <p className="text-gray-500 text-lg">No Product in the Brands Available in the this category.</p>
+                       
                             </div>
                         )}
                     </div>

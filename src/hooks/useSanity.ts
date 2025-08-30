@@ -235,6 +235,21 @@ export function useCategory(slug: string) {
         },
         "alt": image.alt,
         "caption": image.caption
+      },
+      "brands": *[_type == "brand" && references(^._id)] {
+        _id,
+        name,
+        slug,
+        description,
+        "logo": {
+          "asset": {
+            "_ref": logo.asset._ref,
+            "_type": logo.asset._type
+          },
+          "alt": logo.alt,
+          "caption": logo.caption
+        },
+        "productCount": count(*[_type == "product" && references(^._id)])
       }
     }
   `
