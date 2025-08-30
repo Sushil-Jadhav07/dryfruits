@@ -171,3 +171,4 @@ export function useAvifSupport() {
 
   return supportsAvif
 }
+

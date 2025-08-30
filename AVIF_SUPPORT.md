@@ -215,3 +215,4 @@ If you encounter issues:
 2. Verify Sanity configuration
 3. Test with different image formats
 4. Check browser compatibility
+

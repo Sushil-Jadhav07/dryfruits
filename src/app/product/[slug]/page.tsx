@@ -18,6 +18,28 @@ const ProductDetailPage = () => {
     // Fetch product by slug
     const { data: product, loading: productLoading, error: productError } = useProduct(productSlug)
 
+    // Handle keyboard navigation
+    React.useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (!product?.productImages || product.productImages.length <= 1) return
+            
+            if (event.key === 'ArrowLeft') {
+                event.preventDefault()
+                setSelectedImageIndex(prev => 
+                    prev === 0 ? product.productImages.length - 1 : prev - 1
+                )
+            } else if (event.key === 'ArrowRight') {
+                event.preventDefault()
+                setSelectedImageIndex(prev => 
+                    prev === product.productImages.length - 1 ? 0 : prev + 1
+                )
+            }
+        }
+
+        window.addEventListener('keydown', handleKeyDown)
+        return () => window.removeEventListener('keydown', handleKeyDown)
+    }, [product?.productImages])
+
     if (productLoading) {
         return (
             <div className="min-h-screen bg-gray-50 py-12">
@@ -65,47 +87,110 @@ const ProductDetailPage = () => {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
                             {/* Product Images */}
                             <div className="space-y-4">
-                                {/* Main Image */}
-                                <div className="aspect-w-1 aspect-h-1">
-                                    {product.coverImage && product.coverImage.asset && product.coverImage.asset._ref ? (
+                                {/* Main Image with Navigation */}
+                                <div className="relative aspect-w-1 aspect-h-1">
+                                    {/* Main Image */}
+                                    {product.productImages && product.productImages.length > 0 ? (
+                                        <>
+                                            <img
+                                                src={getImageUrl(product.productImages[selectedImageIndex], 600, 600)}
+                                                alt={`${product.name} - Image ${selectedImageIndex + 1}`}
+                                                className="w-full object-cover rounded-lg"
+                                            />
+                                            
+                                            {/* Navigation Buttons */}
+                                            {product.productImages.length > 1 && (
+                                                <>
+                                                    {/* Left Arrow */}
+                                                    <button
+                                                        onClick={() => setSelectedImageIndex(prev => 
+                                                            prev === 0 ? product.productImages.length - 1 : prev - 1
+                                                        )}
+                                                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+                                                        aria-label="Previous image"
+                                                    >
+                                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                                        </svg>
+                                                    </button>
+                                                    
+                                                    {/* Right Arrow */}
+                                                    <button
+                                                        onClick={() => setSelectedImageIndex(prev => 
+                                                            prev === product.productImages.length - 1 ? 0 : prev + 1
+                                                        )}
+                                                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+                                                        aria-label="Next image"
+                                                    >
+                                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                        </svg>
+                                                    </button>
+                                                    
+                                                    {/* Image Counter */}
+                                                    <div className="absolute bottom-2 right-2 bg-black/60 text-white px-2 py-1 rounded text-sm">
+                                                        {selectedImageIndex + 1} / {product.productImages.length}
+                                                    </div>
+                                                </>
+                                            )}
+                                        </>
+                                    ) : product.coverImage && product.coverImage.asset && product.coverImage.asset._ref ? (
                                         <img
                                             src={getImageUrl(product.coverImage, 600, 600)}
                                             alt={product.name}
-                                            className="w-full  object-cover rounded-lg"
+                                            className="w-full object-cover rounded-lg"
                                         />
                                     ) : (
                                         <div className="w-full h-96 bg-gray-200 rounded-lg flex items-center justify-center">
-                                            <span className="text-gray-500">No Image</span>
+                                            <span className="text-gray-500">No Image Available</span>
                                         </div>
                                     )}
                                 </div>
                                 
                                 {/* Thumbnail Images */}
-                                {product.productImages && product.productImages.length > 0 && (
-                                    <div className="flex gap-2 overflow-x-auto">
-                                        {product.productImages.map((image, index) => (
-                                            <button
-                                                key={index}
-                                                onClick={() => setSelectedImageIndex(index)}
-                                                className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 ${
-                                                    index === selectedImageIndex ? 'border-blue-500' : 'border-gray-200'
-                                                }`}
-                                            >
-                                                {image.asset && image.asset._ref ? (
-                                                    <img
-                                                        src={getImageUrl(image, 80, 80)}
-                                                        alt={`${product.name} - Image ${index + 1}`}
-                                                        className="w-full h-full object-cover"
-                                                    />
-                                                ) : (
-                                                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                                                        <span className="text-xs text-gray-500">No Image</span>
-                                                    </div>
-                                                )}
-                                            </button>
-                                        ))}
+                                {product.productImages && product.productImages.length > 0 ? (
+                                    <div className="space-y-2">
+                                        <p className="text-sm font-medium text-gray-700">Product Images</p>
+                                        <div className="flex gap-2 overflow-x-auto pb-2">
+                                            {product.productImages.map((image, index) => (
+                                                <button
+                                                    key={index}
+                                                    onClick={() => setSelectedImageIndex(index)}
+                                                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
+                                                        index === selectedImageIndex 
+                                                            ? 'border-blue-500 ring-2 ring-blue-200 scale-105' 
+                                                            : 'border-gray-200 hover:border-gray-300 hover:scale-102'
+                                                    }`}
+                                                >
+                                                    {image.asset && image.asset._ref ? (
+                                                        <img
+                                                            src={getImageUrl(image, 80, 80)}
+                                                            alt={`${product.name} - Image ${index + 1}`}
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    ) : (
+                                                        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                                            <span className="text-xs text-gray-500">No Image</span>
+                                                        </div>
+                                                    )}
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
-                                )}
+                                ) : product.coverImage && product.coverImage.asset && product.coverImage.asset._ref ? (
+                                    <div className="space-y-2">
+                                        <p className="text-sm font-medium text-gray-700">Cover Image</p>
+                                        <div className="flex gap-2">
+                                            <div className="w-20 h-20 rounded-lg overflow-hidden border-2 border-blue-500 ring-2 ring-blue-200">
+                                                <img
+                                                    src={getImageUrl(product.coverImage, 80, 80)}
+                                                    alt={product.name}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : null}
                             </div>
 
                             {/* Product Info */}
