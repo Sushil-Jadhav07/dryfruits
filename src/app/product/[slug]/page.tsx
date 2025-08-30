@@ -1,9 +1,9 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useProduct } from '@/hooks'
-import { getImageUrl } from '../../../../lib/sanity'
+import { getImageUrl, getAvifImageUrl } from '../../../../lib/sanity'
 import type { Product } from '../../../../types/sanity'
 import MenuTwo from '@/components/Header/Menu/MenuTwo'
 import Footer from '@/components/Footer/Footer'
@@ -18,20 +18,27 @@ const ProductDetailPage = () => {
     // Fetch product by slug
     const { data: product, loading: productLoading, error: productError } = useProduct(productSlug)
 
+    // Reset selected image index when product changes
+    useEffect(() => {
+        if (product?.productImages && product.productImages.length > 0) {
+            setSelectedImageIndex(0)
+        }
+    }, [product])
+
     // Handle keyboard navigation
-    React.useEffect(() => {
+    useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (!product?.productImages || product.productImages.length <= 1) return
             
             if (event.key === 'ArrowLeft') {
                 event.preventDefault()
                 setSelectedImageIndex(prev => 
-                    prev === 0 ? product.productImages.length - 1 : prev - 1
+                    prev === 0 ? (product.productImages?.length || 1) - 1 : prev - 1
                 )
             } else if (event.key === 'ArrowRight') {
                 event.preventDefault()
                 setSelectedImageIndex(prev => 
-                    prev === product.productImages.length - 1 ? 0 : prev + 1
+                    prev === (product.productImages?.length || 1) - 1 ? 0 : prev + 1
                 )
             }
         }
@@ -39,6 +46,35 @@ const ProductDetailPage = () => {
         window.addEventListener('keydown', handleKeyDown)
         return () => window.removeEventListener('keydown', handleKeyDown)
     }, [product?.productImages])
+
+    // Navigation functions
+    const goToPreviousImage = () => {
+        if (!product?.productImages || product.productImages.length <= 1) return
+        setSelectedImageIndex(prev => 
+            prev === 0 ? (product.productImages?.length || 1) - 1 : prev - 1
+        )
+    }
+
+    const goToNextImage = () => {
+        if (!product?.productImages || product.productImages.length <= 1) return
+        setSelectedImageIndex(prev => 
+            prev === (product.productImages?.length || 1) - 1 ? 0 : prev + 1
+        )
+    }
+
+    const goToImage = (index: number) => {
+        if (!product?.productImages || index < 0 || index >= (product.productImages?.length || 0)) return
+        setSelectedImageIndex(index)
+    }
+
+    // Debug logging
+    useEffect(() => {
+        if (product) {
+            console.log('Product loaded:', product)
+            console.log('Product images:', product.productImages)
+            console.log('Selected image index:', selectedImageIndex)
+        }
+    }, [product, selectedImageIndex])
 
     if (productLoading) {
         return (
@@ -71,6 +107,12 @@ const ProductDetailPage = () => {
         )
     }
 
+    // Check if we have multiple images
+    const hasMultipleImages = product.productImages && product.productImages.length > 1
+    const currentImage = product.productImages && product.productImages[selectedImageIndex] 
+        ? product.productImages[selectedImageIndex] 
+        : product.coverImage
+
     return (
         <>
             {/* Header */}
@@ -80,82 +122,74 @@ const ProductDetailPage = () => {
             
             <div className="min-h-screen bg-gray-50 py-8">
                 <div className="container mx-auto px-4">
-                    {/* Breadcrumb */}
-                   
                     {/* Product Details */}
-                    <div className="bg-white rounded-lg  overflow-hidden">
+                    <div className="bg-white rounded-lg overflow-hidden">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
                             {/* Product Images */}
                             <div className="space-y-4">
                                 {/* Main Image with Navigation */}
-                                <div className="relative aspect-w-1 aspect-h-1">
+                                <div className="relative aspect-w-1 aspect-h-1 bg-gray-100 rounded-lg overflow-hidden">
                                     {/* Main Image */}
-                                    {product.productImages && product.productImages.length > 0 ? (
+                                    {currentImage && currentImage.asset && currentImage.asset._ref ? (
                                         <>
                                             <img
-                                                src={getImageUrl(product.productImages[selectedImageIndex], 600, 600)}
+                                                src={getImageUrl(currentImage, 600, 600)}
                                                 alt={`${product.name} - Image ${selectedImageIndex + 1}`}
-                                                className="w-full object-cover rounded-lg"
+                                                className="w-full h-full object-cover"
+                                                onError={(e) => {
+                                                    console.warn('Failed to load main image:', currentImage)
+                                                    e.currentTarget.style.display = 'none'
+                                                }}
                                             />
                                             
-                                            {/* Navigation Buttons */}
-                                            {product.productImages.length > 1 && (
+                                            {/* Navigation Buttons - Always show if multiple images */}
+                                            {hasMultipleImages && (
                                                 <>
                                                     {/* Left Arrow */}
                                                     <button
-                                                        onClick={() => setSelectedImageIndex(prev => 
-                                                            prev === 0 ? product.productImages.length - 1 : prev - 1
-                                                        )}
-                                                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+                                                        onClick={goToPreviousImage}
+                                                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-10"
                                                         aria-label="Previous image"
                                                     >
-                                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                                                         </svg>
                                                     </button>
                                                     
                                                     {/* Right Arrow */}
                                                     <button
-                                                        onClick={() => setSelectedImageIndex(prev => 
-                                                            prev === product.productImages.length - 1 ? 0 : prev + 1
-                                                        )}
-                                                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+                                                        onClick={goToNextImage}
+                                                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-10"
                                                         aria-label="Next image"
                                                     >
-                                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                                         </svg>
                                                     </button>
                                                     
                                                     {/* Image Counter */}
-                                                    <div className="absolute bottom-2 right-2 bg-black/60 text-white px-2 py-1 rounded text-sm">
-                                                        {selectedImageIndex + 1} / {product.productImages.length}
+                                                    <div className="absolute bottom-2 right-2 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-medium">
+                                                        {selectedImageIndex + 1} / {product.productImages?.length || 0}
                                                     </div>
                                                 </>
                                             )}
                                         </>
-                                    ) : product.coverImage && product.coverImage.asset && product.coverImage.asset._ref ? (
-                                        <img
-                                            src={getImageUrl(product.coverImage, 600, 600)}
-                                            alt={product.name}
-                                            className="w-full object-cover rounded-lg"
-                                        />
                                     ) : (
-                                        <div className="w-full h-96 bg-gray-200 rounded-lg flex items-center justify-center">
+                                        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                                             <span className="text-gray-500">No Image Available</span>
                                         </div>
                                     )}
                                 </div>
                                 
                                 {/* Thumbnail Images */}
-                                {product.productImages && product.productImages.length > 0 ? (
+                                {hasMultipleImages ? (
                                     <div className="space-y-2">
-                                        <p className="text-sm font-medium text-gray-700">Product Images</p>
+                                        <p className="text-sm font-medium text-gray-700">Product Images ({product.productImages?.length || 0})</p>
                                         <div className="flex gap-2 overflow-x-auto pb-2">
-                                            {product.productImages.map((image, index) => (
+                                            {product.productImages?.map((image, index) => (
                                                 <button
                                                     key={index}
-                                                    onClick={() => setSelectedImageIndex(index)}
+                                                    onClick={() => goToImage(index)}
                                                     className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
                                                         index === selectedImageIndex 
                                                             ? 'border-blue-500 ring-2 ring-blue-200 scale-105' 
@@ -167,6 +201,10 @@ const ProductDetailPage = () => {
                                                             src={getImageUrl(image, 80, 80)}
                                                             alt={`${product.name} - Image ${index + 1}`}
                                                             className="w-full h-full object-cover"
+                                                            onError={(e) => {
+                                                                console.warn('Failed to load thumbnail:', image)
+                                                                e.currentTarget.style.display = 'none'
+                                                            }}
                                                         />
                                                     ) : (
                                                         <div className="w-full h-full bg-gray-200 flex items-center justify-center">
@@ -208,9 +246,6 @@ const ProductDetailPage = () => {
                                 {/* Product Name */}
                                 <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
 
-                                {/* Price */}
-                               
-
                                 {/* Description */}
                                 {product.description && (
                                     <div>
@@ -218,12 +253,6 @@ const ProductDetailPage = () => {
                                         <p className="text-gray-600 leading-relaxed">{product.description}</p>
                                     </div>
                                 )}
-
-                                {/* Long Description */}
-                               
-
-                                {/* Stock Status */}
-                                
 
                                 {/* WhatsApp Button */}
                                 <div className="pt-4">
