@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { useCategory, useBrands, useProducts } from '@/hooks'
-import { getImageUrl } from '../../../../lib/sanity'
+import { getImageUrl, getAvifImageUrl } from '../../../../lib/sanity'
 import type { Category, Brand, Product } from '../../../../types/sanity'
 import MenuTwo from '@/components/Header/Menu/MenuTwo'
 import Footer from '@/components/Footer/Footer'
@@ -169,16 +169,22 @@ const CategoryPage = () => {
                                     >
                                         <div className="flex flex-col items-center">
                                             {brand.logo && brand.logo.asset && brand.logo.asset._ref ? (
-                                                <img
-                                                    src={getImageUrl(brand.logo, 900, 900)}
-                                                    alt={brand.name}
-                                                    className="w-[300px] object-contain mb-2"
-                                                    onError={(e) => {
-                                                        console.warn('Failed to load brand logo:', brand.logo)
-                                                        e.currentTarget.style.display = 'none'
-                                                        e.currentTarget.nextElementSibling?.nextElementSibling?.classList.remove('hidden')
-                                                    }}
-                                                />
+                                                <picture>
+                                                    <source
+                                                        srcSet={getAvifImageUrl(brand.logo, 900, 900, 85)}
+                                                        type="image/avif"
+                                                    />
+                                                    <img
+                                                        src={getImageUrl(brand.logo, 900, 900)}
+                                                        alt={brand.name}
+                                                        className="w-[300px] object-contain mb-2"
+                                                        onError={(e) => {
+                                                            console.warn('Failed to load brand logo:', brand.logo)
+                                                            e.currentTarget.style.display = 'none'
+                                                            e.currentTarget.nextElementSibling?.nextElementSibling?.classList.remove('hidden')
+                                                        }}
+                                                    />
+                                                </picture>
                                             ) : null}
                                             <div className={`w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center mb-2 ${brand.logo && brand.logo.asset && brand.logo.asset._ref ? 'hidden' : ''}`}>
                                                 <span className="text-gray-500 text-xs">No Logo</span>
@@ -232,16 +238,22 @@ const CategoryPage = () => {
                                     <div className="bg-white rounded-lg shadow-md overflow-hidden">
                                         <div className="aspect-w-16 aspect-h-9">
                                             {product.coverImage && product.coverImage.asset && product.coverImage.asset._ref ? (
-                                                <img
-                                                    src={getImageUrl(product.coverImage, 400, 400)}
-                                                    alt={product.name}
-                                                    className="w-full h-64 object-cover"
-                                                    onError={(e) => {
-                                                        console.warn('Failed to load product image:', product.coverImage)
-                                                        e.currentTarget.style.display = 'none'
-                                                        e.currentTarget.nextElementSibling?.classList.remove('hidden')
-                                                    }}
-                                                />
+                                                <picture>
+                                                    <source
+                                                        srcSet={getAvifImageUrl(product.coverImage, 400, 400, 85)}
+                                                        type="image/avif"
+                                                    />
+                                                    <img
+                                                        src={getImageUrl(product.coverImage, 400, 400)}
+                                                        alt={product.name}
+                                                        className="w-full h-64 object-cover"
+                                                        onError={(e) => {
+                                                            console.warn('Failed to load product image:', product.coverImage)
+                                                            e.currentTarget.style.display = 'none'
+                                                            e.currentTarget.nextElementSibling?.classList.remove('hidden')
+                                                        }}
+                                                    />
+                                                </picture>
                                             ) : null}
                                             <div className={`w-full h-64 bg-gray-200 flex items-center justify-center ${product.coverImage && product.coverImage.asset && product.coverImage.asset._ref ? 'hidden' : ''}`}>
                                                 <span className="text-gray-500">No Image</span>
