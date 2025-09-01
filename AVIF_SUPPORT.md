@@ -216,3 +216,4 @@ If you encounter issues:
 3. Test with different image formats
 4. Check browser compatibility
 
+

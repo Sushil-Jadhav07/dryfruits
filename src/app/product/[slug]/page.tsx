@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useProduct } from '@/hooks'
 import { getImageUrl, getAvifImageUrl } from '../../../../lib/sanity'
@@ -14,6 +14,9 @@ const ProductDetailPage = () => {
     const productSlug = params.slug as string
     
     const [selectedImageIndex, setSelectedImageIndex] = useState(0)
+    const [isDragging, setIsDragging] = useState(false)
+    const [dragX, setDragX] = useState(0)
+    const dragStartXRef = useRef(0)
     
     // Fetch product by slug
     const { data: product, loading: productLoading, error: productError } = useProduct(productSlug)
@@ -65,6 +68,45 @@ const ProductDetailPage = () => {
     const goToImage = (index: number) => {
         if (!product?.productImages || index < 0 || index >= (product.productImages?.length || 0)) return
         setSelectedImageIndex(index)
+    }
+
+    // Drag/Swipe handlers for main image
+    const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+        if (!hasMultipleImages) return
+        setIsDragging(true)
+        dragStartXRef.current = e.clientX
+        setDragX(0)
+        try {
+            ;(e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId)
+        } catch {}
+    }
+
+    const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+        if (!isDragging) return
+        const dx = e.clientX - dragStartXRef.current
+        setDragX(dx)
+    }
+
+    const endDrag = () => {
+        if (!isDragging) return
+        const threshold = 60
+        const dx = dragX
+        setIsDragging(false)
+        setDragX(0)
+        if (Math.abs(dx) > threshold) {
+            if (dx < 0) {
+                goToNextImage()
+            } else {
+                goToPreviousImage()
+            }
+        }
+    }
+
+    const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+        try {
+            ;(e.currentTarget as HTMLElement).releasePointerCapture?.(e.pointerId)
+        } catch {}
+        endDrag()
     }
 
     // Debug logging
@@ -128,14 +170,27 @@ const ProductDetailPage = () => {
                             {/* Product Images */}
                             <div className="space-y-4">
                                 {/* Main Image with Navigation */}
-                                <div className="relative aspect-w-1 aspect-h-1 bg-gray-100 rounded-lg overflow-hidden">
+                                <div
+                                    className="relative aspect-w-1 aspect-h-1 bg-gray-100 rounded-lg overflow-hidden select-none"
+                                    onPointerDown={handlePointerDown}
+                                    onPointerMove={handlePointerMove}
+                                    onPointerUp={handlePointerUp}
+                                    onPointerCancel={endDrag}
+                                    onPointerLeave={endDrag}
+                                    style={{ touchAction: hasMultipleImages ? 'pan-y' as const : 'auto' as const }}
+                                >
                                     {/* Main Image */}
                                     {currentImage && currentImage.asset && currentImage.asset._ref ? (
                                         <>
                                             <img
                                                 src={getImageUrl(currentImage, 600, 600)}
                                                 alt={`${product.name} - Image ${selectedImageIndex + 1}`}
-                                                className="w-full h-full object-cover"
+                                                className={`w-full h-full object-cover ${hasMultipleImages ? 'cursor-grab active:cursor-grabbing' : ''}`}
+                                                style={{
+                                                    transform: `translateX(${dragX}px)`,
+                                                    transition: isDragging ? 'none' : 'transform 200ms ease',
+                                                }}
+                                                draggable={false}
                                                 onError={(e) => {
                                                     console.warn('Failed to load main image:', currentImage)
                                                     e.currentTarget.style.display = 'none'
