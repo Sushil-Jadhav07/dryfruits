@@ -11,6 +11,7 @@ import type {
   BrandsResponse,
   BlogPostsResponse
 } from '../../types/sanity'
+import type { SliderDocument } from '../../types/sanity'
 
 // Generic hook for any Sanity query
 export function useSanityQuery<T>(
@@ -103,6 +104,7 @@ export function useProduct(slug: string) {
       price,
       comparePrice,
       description,
+      richDescription,
       longDescription,
       "coverImage": {
         "asset": {
@@ -469,4 +471,44 @@ export function useProductSearch(searchTerm: string) {
     { searchTerm }, 
     [searchTerm]
   )
+}
+
+// Slider hooks
+export function useSlider() {
+  const query = `
+    *[_type == "slider"] | order(_updatedAt desc)[0] {
+      _id,
+      _type,
+      "image": {
+        "asset": {
+          "_ref": image.asset._ref,
+          "_type": image.asset._type
+        },
+        "alt": image.alt,
+        "caption": image.caption
+      }
+    }
+  `
+
+  return useSanityQuery<SliderDocument>(query)
+}
+
+// Fetch all slider documents (each with a single image)
+export function useSliders() {
+  const query = `
+    *[_type == "slider"] | order(_createdAt asc) {
+      _id,
+      _type,
+      "image": {
+        "asset": {
+          "_ref": image.asset._ref,
+          "_type": image.asset._type
+        },
+        "alt": image.alt,
+        "caption": image.caption
+      }
+    }
+  `
+
+  return useSanityQuery<SliderDocument[]>(query)
 }

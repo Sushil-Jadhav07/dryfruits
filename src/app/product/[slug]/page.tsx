@@ -166,7 +166,7 @@ const ProductDetailPage = () => {
                 <div className="container mx-auto px-4">
                     {/* Product Details */}
                     <div className="bg-white rounded-lg overflow-hidden">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 px-3 py-3">
                             {/* Product Images */}
                             <div className="space-y-4">
                                 {/* Main Image with Navigation */}
@@ -197,36 +197,17 @@ const ProductDetailPage = () => {
                                                 }}
                                             />
                                             
-                                            {/* Navigation Buttons - Always show if multiple images */}
+                                            {/* Brand label overlay */}
+                                            {product.brand?.name && (
+                                                <div className="absolute top-3 left-1/2 -translate-x-1/2 bg-black/70 text-white px-4 py-1 rounded-full text-sm font-semibold tracking-wide">
+                                                    {product.brand.name}
+                                                </div>
+                                            )}
+                                            {/* Image Counter (optional) */}
                                             {hasMultipleImages && (
-                                                <>
-                                                    {/* Left Arrow */}
-                                                    <button
-                                                        onClick={goToPreviousImage}
-                                                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-10"
-                                                        aria-label="Previous image"
-                                                    >
-                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                                                        </svg>
-                                                    </button>
-                                                    
-                                                    {/* Right Arrow */}
-                                                    <button
-                                                        onClick={goToNextImage}
-                                                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-10"
-                                                        aria-label="Next image"
-                                                    >
-                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                        </svg>
-                                                    </button>
-                                                    
-                                                    {/* Image Counter */}
-                                                    <div className="absolute bottom-2 right-2 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-medium">
-                                                        {selectedImageIndex + 1} / {product.productImages?.length || 0}
-                                                    </div>
-                                                </>
+                                                <div className="absolute bottom-2 right-2 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-medium">
+                                                    {selectedImageIndex + 1} / {product.productImages?.length || 0}
+                                                </div>
                                             )}
                                         </>
                                     ) : (
@@ -245,10 +226,10 @@ const ProductDetailPage = () => {
                                                 <button
                                                     key={index}
                                                     onClick={() => goToImage(index)}
-                                                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
+                                                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-b-2 transition-all duration-200 ${
                                                         index === selectedImageIndex 
-                                                            ? 'border-blue-500 ring-2 ring-blue-200 scale-105' 
-                                                            : 'border-gray-200 hover:border-gray-300 hover:scale-102'
+                                                            ? 'border-b-blue-500 ring-2 ring-blue-200 scale-105' 
+                                                            : 'border-b-transparent hover:border-b-gray-300 hover:scale-102'
                                                     }`}
                                                 >
                                                     {image.asset && image.asset._ref ? (
@@ -302,10 +283,16 @@ const ProductDetailPage = () => {
                                 <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
 
                                 {/* Description */}
-                                {product.description && (
+                                {(product.richDescription || product.longDescription || product.description) && (
                                     <div>
                                         <h3 className="text-lg font-semibold text-gray-900 mb-2">Description</h3>
-                                        <p className="text-gray-600 leading-relaxed">{product.description}</p>
+                                        <div className="text-gray-700 leading-relaxed space-y-3">
+                                            {Array.isArray(product.richDescription)
+                                                ? (<RichDescription blocks={product.richDescription as any[]} />)
+                                                : Array.isArray(product.longDescription)
+                                                    ? (<RichDescription blocks={product.longDescription as any[]} />)
+                                                    : (<PlainTextDescription text={product.description || ''} />)}
+                                        </div>
                                     </div>
                                 )}
 
@@ -350,3 +337,99 @@ const ProductDetailPage = () => {
 }
 
 export default ProductDetailPage
+
+// Helpers to render description nicely without extra libs
+function PlainTextDescription({ text }: { text: string }) {
+    if (!text) return null
+    // Normalize line endings and collapse extra spaces
+    const normalized = text.replace(/\r\n?/g, '\n')
+    // Split into lines and group bullets
+    const lines = normalized.split('\n').map(l => l.trim()).filter(Boolean)
+    const chunks: Array<{ type: 'p' | 'ul'; content: string[] }> = []
+    let currentList: string[] | null = null
+
+    lines.forEach(line => {
+        // Detect bullets at start OR inline bullets like "• item1 • item2"
+        const hasInlineBullets = /[•·]/.test(line) && line.split(/[•·]/).filter(s => s.trim()).length > 1
+        const isBulletStart = /^\s*([-*•]|\u2022)/.test(line)
+        if (hasInlineBullets) {
+            // Flush any open paragraph/list
+            currentList = null
+            const items = line.split(/[•·]/).map(s => s.trim()).filter(Boolean)
+            chunks.push({ type: 'ul', content: items })
+            return
+        }
+        const cleaned = line.replace(/^\s*([-*•]\s?)/, '').trim()
+        const isBullet = isBulletStart
+        if (isBullet) {
+            if (!currentList) {
+                currentList = []
+                chunks.push({ type: 'ul', content: currentList })
+            }
+            currentList.push(cleaned)
+        } else {
+            currentList = null
+            chunks.push({ type: 'p', content: [line] })
+        }
+    })
+
+    return (
+        <div className="max-w-none space-y-3">
+            {chunks.map((c, i) =>
+                c.type === 'p' ? (
+                    <p key={i} className="whitespace-pre-line">{c.content[0]}</p>
+                ) : (
+                    <ul key={i} className="list-disc pl-5">
+                        {c.content.map((item, j) => (
+                            <li key={j}>{item}</li>
+                        ))}
+                    </ul>
+                )
+            )}
+        </div>
+    )
+}
+
+type Block = { _type: string; children?: Array<{ text: string }>; listItem?: 'bullet' | 'number'; level?: number }
+
+function RichDescription({ blocks }: { blocks: Block[] }) {
+    const elements: React.ReactNode[] = []
+    let listBuffer: { type: 'ul' | 'ol'; items: string[] } | null = null
+
+    const flushList = () => {
+        if (!listBuffer) return
+        const listEl = listBuffer.type === 'ul' ? (
+            <ul className="list-disc pl-5">
+                {listBuffer.items.map((it, idx) => (<li key={idx}>{it}</li>))}
+            </ul>
+        ) : (
+            <ol className="list-decimal pl-5">
+                {listBuffer.items.map((it, idx) => (<li key={idx}>{it}</li>))}
+            </ol>
+        )
+        elements.push(<div key={`list-${elements.length}`}>{listEl}</div>)
+        listBuffer = null
+    }
+
+    blocks.forEach((block, idx) => {
+        if (block._type === 'block') {
+            const text = (block.children || []).map(c => c.text).join('')
+            if (block.listItem === 'bullet' || block.listItem === 'number') {
+                const type = block.listItem === 'bullet' ? 'ul' : 'ol'
+                if (!listBuffer || listBuffer.type !== type) {
+                    flushList()
+                    listBuffer = { type, items: [] }
+                }
+                listBuffer.items.push(text)
+            } else {
+                flushList()
+                elements.push(
+                    <p key={`p-${idx}`} className="whitespace-pre-line">{text}</p>
+                )
+            }
+        }
+    })
+    flushList()
+
+    return <div className="max-w-none space-y-3">{elements}</div>
+}

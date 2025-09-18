@@ -8,6 +8,9 @@ import type { Category, Brand, Product } from '../../../../types/sanity'
 import MenuTwo from '@/components/Header/Menu/MenuTwo'
 import Footer from '@/components/Footer/Footer'
 import Link from 'next/link'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Autoplay } from 'swiper/modules'
+import 'swiper/css/bundle'
 
 const CategoryPage = () => {
     const router = useRouter()
@@ -53,35 +56,7 @@ const CategoryPage = () => {
         return categoryBrands
     }
 
-    // Auto-select first brand when brands are loaded
-    useEffect(() => {
-        if (!allBrands || !category) return
-        
-        let categoryBrands: Brand[] = []
-        
-        // First, check if the category has brands directly associated with it
-        if (category.brands && category.brands.length > 0) {
-            categoryBrands = category.brands
-        } else {
-            // Fallback: Get brands that have products in this category
-            if (products) {
-                const categoryBrandIds = new Set(
-                    products
-                        .filter(product => 
-                            product.category && product.category._id === category._id
-                        )
-                        .map(product => product.brand?._id)
-                        .filter(Boolean)
-                )
-                
-                categoryBrands = allBrands.filter(brand => categoryBrandIds.has(brand._id))
-            }
-        }
-        
-        if (categoryBrands.length > 0 && !selectedBrand) {
-            setSelectedBrand(categoryBrands[0])
-        }
-    }, [allBrands, products, category, selectedBrand])
+    // Do not auto-select a brand; show all until user clicks
 
     // Filter products based on selected category and brand
     const getFilteredProducts = () => {
@@ -109,6 +84,10 @@ const CategoryPage = () => {
     }
 
     const filteredProducts = getFilteredProducts()
+    // Determine which brands to show (all or only selected)
+    const brandsToShow = selectedBrand
+        ? getCategoryBrands().filter(b => b._id === selectedBrand._id)
+        : getCategoryBrands()
 
     if (categoryLoading) {
         return (
@@ -160,10 +139,22 @@ const CategoryPage = () => {
                 
 
                 {/* Brands Tabs */}
-                <div className="mb-12 bg-white rounded-xl p-8 ">
+                <div className="mb-6 bg-white rounded-xl p-4 ">
                     <div className="text-center mb-8">
                         <h2 className="text-2xl font-semibold mb-2">Brands in {category.name}</h2>
-             
+                        {selectedBrand && (
+                            <div className="mt-4">
+                                <button
+                                    onClick={() => setSelectedBrand(null)}
+                                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-gray-100 hover:bg-gray-200 text-gray-800 transition"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                                      <path fillRule="evenodd" d="M15.78 19.28a.75.75 0 01-1.06 0l-6.75-6.75a.75.75 0 010-1.06l6.75-6.75a.75.75 0 111.06 1.06L9.31 11.25H20a.75.75 0 010 1.5H9.31l6.47 6.47a.75.75 0 010 1.06z" clipRule="evenodd" />
+                                    </svg>
+                                    Back to all brands
+                                </button>
+                            </div>
+                        )}
                     </div>
                     
                     {(brandsLoading || productsLoading) ? (
@@ -176,8 +167,8 @@ const CategoryPage = () => {
                             <p className="text-red-600">Error loading data: {brandsError || productsError}</p>
                         </div>
                     ) : getCategoryBrands().length > 0 ? (
-                        <div className="flex flex-wrap justify-center gap-8">
-                            {getCategoryBrands().map((brand) => (
+                        <div className={`${brandsToShow.length === 1 ? 'flex justify-center' : 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'} gap-6`}>
+                            {brandsToShow.map((brand) => (
                                 <div
                                     key={brand._id}
                                     onClick={() => handleBrandClick(brand)}
@@ -187,7 +178,6 @@ const CategoryPage = () => {
                                             : 'hover:scale-105 hover:bg-gray-50'
                                     }`}
                                 >
-                                    {/* Brand Logo - Circular */}
                                     <div className={`w-24 h-24 rounded-full overflow-hidden border-4 mb-4 transition-all duration-300 ${
                                         selectedBrand?._id === brand._id 
                                             ? 'border-blue-500 shadow-lg shadow-blue-200 ring-4 ring-blue-100' 
@@ -216,8 +206,6 @@ const CategoryPage = () => {
                                             </div>
                                         )}
                                     </div>
-                                    
-                                    {/* Brand Name */}
                                     <span className={`text-base font-medium text-center transition-colors duration-300 ${
                                         selectedBrand?._id === brand._id 
                                             ? 'text-blue-600 font-semibold' 
@@ -225,8 +213,6 @@ const CategoryPage = () => {
                                     }`}>
                                         {brand.name}
                                     </span>
-                                    
-                                    {/* Active Indicator */}
                                     {selectedBrand?._id === brand._id && (
                                         <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 animate-pulse"></div>
                                     )}
@@ -234,7 +220,7 @@ const CategoryPage = () => {
                             ))}
                         </div>
                     ) : (
-                        <div className="text-center py-8">
+                        <div className="text-center py-4">
                             <div className="mb-4">
                                 <svg className="w-16 h-16 text-gray-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -249,31 +235,29 @@ const CategoryPage = () => {
 
                 {/* Products View - Only show if there are brands */}
                 {getCategoryBrands().length === 0 && !brandsLoading && !productsLoading ? (
-                    <div className="text-center py-12">
+                    <div className="text-center py-6">
                       
                         <p className="text-gray-500 text-lg">No Products available in this category</p>
                        
                     </div>
                 ) : !selectedBrand && (brandsLoading || productsLoading) ? (
-                    <div className="text-center py-12">
+                    <div className="text-center py-6">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
                         <p className="text-gray-600">Loading brands and products...</p>
                     </div>
                 ) : selectedBrand ? (
                     <div>
-                        <div className="text-center mb-8">
-                            <h2 className="text-2xl font-semibold mb-2">
-                                Products in {selectedBrand.name}
-                            </h2>
+                        <div className="text-center mb-4">
+                        image.png
                         </div>
                         
                         {productsLoading ? (
-                            <div className="text-center py-8">
+                            <div className="text-center py-4">
                                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
                                 <p className="mt-4 text-gray-600">Loading products...</p>
                             </div>
                         ) : filteredProducts.length === 0 ? (
-                            <div className="text-center py-12">
+                            <div className="text-center py-6">
                                 <div className="mb-4">
                                     <svg className="w-16 h-16 text-gray-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4m0 0L4 7m8-4v16l8-4m-8 4V7" />

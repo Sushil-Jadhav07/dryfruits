@@ -78,7 +78,8 @@ export interface Product {
   price: number
   comparePrice?: number
   description?: string
-  longDescription?: string
+  longDescription?: any
+  richDescription?: any
   coverImage?: SanityImage
   productImages?: Array<{
     _key: string
@@ -170,3 +171,12 @@ export interface SanityConfig {
   useCdn: boolean
   hasToken: boolean
 }
+
+// Slider Types
+export interface SliderDocument {
+  _id: string
+  _type: 'slider'
+  image: SanityImage
+}
+
+export type SlidersResponse = SliderDocument[]

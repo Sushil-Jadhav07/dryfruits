@@ -11,5 +11,7 @@ export {
   useBlogPost,
   useFeaturedProducts,
   useProductsOnSale,
-  useProductSearch
+  useProductSearch,
+  useSlider,
+  useSliders
 } from './useSanity'
