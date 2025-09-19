@@ -163,15 +163,15 @@ const ProductDetailPage = () => {
             </div>
             
             <div className="min-h-screen bg-gray-50 py-8">
-                <div className="container mx-auto px-4">
+                <div className="container mx-auto lg:px-4 px-0">
                     {/* Product Details */}
                     <div className="bg-white rounded-lg overflow-hidden">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 px-3 py-3">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 px-0 md:px-3 py-3">
                             {/* Product Images */}
                             <div className="space-y-4">
                                 {/* Main Image with Navigation */}
                                 <div
-                                    className="relative aspect-w-1 aspect-h-1 bg-gray-100 rounded-lg overflow-hidden select-none"
+                                    className="relative aspect-w-1 aspect-h-1 bg-gray-100 rounded-lg overflow-hidden select-none -mx-4 md:mx-0"
                                     onPointerDown={handlePointerDown}
                                     onPointerMove={handlePointerMove}
                                     onPointerUp={handlePointerUp}
@@ -219,7 +219,7 @@ const ProductDetailPage = () => {
                                 
                                 {/* Thumbnail Images */}
                                 {hasMultipleImages ? (
-                                    <div className="space-y-2">
+                                    <div className="space-y-2 lg:px-0 px-4">
                                         <p className="text-sm font-medium text-gray-700">Product Images ({product.productImages?.length || 0})</p>
                                         <div className="flex gap-2 overflow-x-auto pb-2">
                                             {product.productImages?.map((image, index) => (
@@ -268,7 +268,7 @@ const ProductDetailPage = () => {
                             </div>
 
                             {/* Product Info */}
-                            <div className="space-y-6">
+                            <div className="space-y-6 lg:px-0 px-4">
                                 {/* Category and Brand */}
                                 <div className="flex items-center gap-3 mb-4">
                                     <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-[#dcdcde] text-gray-800">
