@@ -199,7 +199,7 @@ const ProductDetailPage = () => {
                                             
                                             {/* Brand label overlay */}
                                             {product.brand?.name && (
-                                                <div className="absolute top-3 left-1/2 -translate-x-1/2 bg-black/70 text-white px-4 py-1 rounded-full text-sm font-semibold tracking-wide">
+                                                <div className="absolute top-3 left-1/2 -translate-x-1/2  text-white px-4 py-1 rounded-full text-sm font-semibold tracking-wide">
                                                     {product.brand.name}
                                                 </div>
                                             )}
