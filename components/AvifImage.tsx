@@ -174,9 +174,3 @@ export function useAvifSupport() {
 
 
 
-
-
-
-
-
-

@@ -104,7 +104,6 @@ export function useProduct(slug: string) {
       price,
       comparePrice,
       description,
-      richDescription,
       longDescription,
       "coverImage": {
         "asset": {

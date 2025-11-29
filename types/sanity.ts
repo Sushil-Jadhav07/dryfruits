@@ -78,8 +78,7 @@ export interface Product {
   price: number
   comparePrice?: number
   description?: string
-  longDescription?: any
-  richDescription?: any
+  longDescription?: string
   coverImage?: SanityImage
   productImages?: Array<{
     _key: string
