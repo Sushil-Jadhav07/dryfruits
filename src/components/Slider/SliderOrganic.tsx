@@ -1,36 +1,28 @@
 'use client'
 
 import React from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css/bundle';
 import { useSliders } from '@/hooks/useSanity'
-import { getImageUrl } from '@/lib/sanity'
+import { getVideoUrl } from '@/lib/sanity'
 
 const SliderOrganic = () => {
     const { data: sliders, loading } = useSliders()
 
-    // Fallback slides if no Sanity data
+    // Fallback videos if no Sanity data
     const fallbackSlides = [
         {
             key: 'fallback-1',
-            src: '/images/banner/2.png',
-            width: 3840,
-            height: 2160,
-            alt: 'organic1',
+            src: '/videos/banner/video1.mp4',
         },
         {
             key: 'fallback-2',
-            src: '/images/banner/1.png',
-            width: 1920,
-            height: 1080,
-            alt: 'organic2',
+            src: '/videos/banner/video2.mp4',
         },
     ]
 
-    const hasSanityImages = Array.isArray(sliders) && sliders.length > 0
+    const hasSanityVideos = Array.isArray(sliders) && sliders.length > 0
 
     return (
         <>
@@ -45,22 +37,25 @@ const SliderOrganic = () => {
                         className='h-full relative'
                         autoplay={{
                             delay: 4000,
+                            disableOnInteraction: false,
                         }}
                     >
-                        {hasSanityImages
+                        {hasSanityVideos
                             ? sliders!.map((doc, idx) => {
-                                const url = getImageUrl((doc as any).image, 3840, 2160)
+                                const videoUrl = (doc as any).video?.asset?.url || getVideoUrl((doc as any).video)
+                                if (!videoUrl) return null
+                                
                                 return (
                                   <SwiperSlide key={doc._id || `sanity-${idx}`}>
                                     <div className="slider-item h-full w-full relative">
                                       <div className="container w-full h-full flex items-center">
                                         <div className="sub-img absolute left-0 top-0 w-full h-full z-[-1]">
-                                          <Image
-                                            src={url}
-                                            width={3840}
-                                            height={2160}
-                                            alt={'slide'}
-                                            priority={true}
+                                          <video
+                                            src={videoUrl}
+                                            autoPlay
+                                            loop
+                                            muted
+                                            playsInline
                                             className='w-full h-full object-cover'
                                           />
                                         </div>
@@ -74,12 +69,12 @@ const SliderOrganic = () => {
                                     <div className="slider-item h-full w-full relative">
                                         <div className="container w-full h-full flex items-center">
                                             <div className="sub-img absolute left-0 top-0 w-full h-full z-[-1]">
-                                                <Image
+                                                <video
                                                     src={f.src}
-                                                    width={f.width}
-                                                    height={f.height}
-                                                    alt={f.alt}
-                                                    priority={true}
+                                                    autoPlay
+                                                    loop
+                                                    muted
+                                                    playsInline
                                                     className='w-full h-full object-cover'
                                                 />
                                             </div>

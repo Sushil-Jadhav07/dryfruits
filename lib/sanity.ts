@@ -165,6 +165,38 @@ export async function getBestImageFormat(
   return getOptimizedImageUrl(source, width, height, quality, 'webp')
 }
 
+// Function to get video URL from Sanity file asset
+export function getVideoUrl(source: any): string | null {
+  // Check if source exists and has valid asset reference
+  if (!source || !source.asset) {
+    return null
+  }
+  
+  try {
+    // First try to use the URL if it's already provided by Sanity
+    if (source.asset.url) {
+      return source.asset.url
+    }
+    
+    // Otherwise, construct URL from asset reference
+    if (!source.asset._ref || source.asset._ref === '') {
+      return null
+    }
+    
+    // Extract asset ID from reference (format: file-{id}-{ext})
+    const assetId = source.asset._ref.replace(/^file-/, '').replace(/-\w+$/, '')
+    const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
+    const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
+    
+    // Construct the video URL
+    const url = `https://cdn.sanity.io/files/${projectId}/${dataset}/${assetId}`
+    return url
+  } catch (error) {
+    console.warn('Error generating video URL:', error)
+    return null
+  }
+}
+
 // Export client configuration for debugging
 export const sanityConfig = {
   projectId,

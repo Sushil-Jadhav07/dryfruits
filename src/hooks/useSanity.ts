@@ -500,13 +500,15 @@ export function useSlider() {
     *[_type == "slider"] | order(_updatedAt desc)[0] {
       _id,
       _type,
-      "image": {
+      "video": {
         "asset": {
-          "_ref": image.asset._ref,
-          "_type": image.asset._type
-        },
-        "alt": image.alt,
-        "caption": image.caption
+          "_ref": video.asset._ref,
+          "_type": video.asset._type,
+          "url": video.asset->url,
+          "originalFilename": video.asset->originalFilename,
+          "mimeType": video.asset->mimeType,
+          "size": video.asset->size
+        }
       }
     }
   `
@@ -514,19 +516,21 @@ export function useSlider() {
   return useSanityQuery<SliderDocument>(query)
 }
 
-// Fetch all slider documents (each with a single image)
+// Fetch all slider documents (each with a single video)
 export function useSliders() {
   const query = `
     *[_type == "slider"] | order(_createdAt asc) {
       _id,
       _type,
-      "image": {
+      "video": {
         "asset": {
-          "_ref": image.asset._ref,
-          "_type": image.asset._type
-        },
-        "alt": image.alt,
-        "caption": image.caption
+          "_ref": video.asset._ref,
+          "_type": video.asset._type,
+          "url": video.asset->url,
+          "originalFilename": video.asset->originalFilename,
+          "mimeType": video.asset->mimeType,
+          "size": video.asset->size
+        }
       }
     }
   `

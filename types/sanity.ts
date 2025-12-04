@@ -171,11 +171,23 @@ export interface SanityConfig {
   hasToken: boolean
 }
 
+// Sanity File/Video Types
+export interface SanityFile {
+  asset: {
+    _ref: string
+    _type: string
+    url?: string
+    originalFilename?: string
+    mimeType?: string
+    size?: number
+  }
+}
+
 // Slider Types
 export interface SliderDocument {
   _id: string
   _type: 'slider'
-  image: SanityImage
+  video: SanityFile
 }
 
 export type SlidersResponse = SliderDocument[]
