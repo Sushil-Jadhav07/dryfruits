@@ -7,6 +7,7 @@ export {
   useCategoriesWithBrands,
   useCategory,
   useBrands,
+  useBrand,
   useBlogPosts,
   useBlogPost,
   useFeaturedProducts,

@@ -10,8 +10,8 @@ import type {
   CategoriesWithBrandsResponse,
   BrandsResponse,
   BlogPostsResponse
-} from '../../types/sanity'
-import type { SliderDocument } from '../../types/sanity'
+} from '@/types/sanity'
+import type { SliderDocument } from '@/types/sanity'
 
 // Generic hook for any Sanity query
 export function useSanityQuery<T>(
@@ -186,7 +186,7 @@ export function useCategories() {
 
 // New hook for categories with their brands
 export function useCategoriesWithBrands() {
-  const query = `
+const query = `
     *[_type == "category"] {
       _id,
       name,
@@ -200,7 +200,7 @@ export function useCategoriesWithBrands() {
         "alt": image.alt,
         "caption": image.caption
       },
-      "brands": *[_type == "brand" && references(^._id)] {
+      "brands": brands[]-> {
         _id,
         name,
         slug,
@@ -237,7 +237,7 @@ export function useCategory(slug: string) {
         "alt": image.alt,
         "caption": image.caption
       },
-      "brands": *[_type == "brand" && references(^._id)] {
+      "brands": brands[]-> {
         _id,
         name,
         slug,
@@ -278,6 +278,28 @@ export function useBrands() {
   `
   
   return useSanityQuery<BrandsResponse>(query)
+}
+
+export function useBrand(slug: string) {
+  const query = `
+    *[_type == "brand" && slug.current == $slug][0] {
+      _id,
+      name,
+      slug,
+      description,
+      "logo": {
+        "asset": {
+          "_ref": logo.asset._ref,
+          "_type": logo.asset._type
+        },
+        "alt": logo.alt,
+        "caption": logo.caption
+      },
+      "productCount": count(*[_type == "product" && references(^._id)])
+    }
+  `
+  
+  return useSanityQuery<Brand>(query, { slug }, [slug])
 }
 
 export function useBlogPosts() {

@@ -77,7 +77,7 @@ const MenuTwo = () => {
                             <i className="icon-category text-2xl"></i>
                         </div>
                         <Link href={'/'} className='flex items-center'>
-                            <div className="heading4">LOGO</div>
+                            <Image src="/images/logomain.png" alt="" width={100} height={100} className='w-[30px] h-[30px]' />
                         </Link>
                         <div className="menu-main h-full max-lg:hidden">
                             <ul className='flex items-center gap-8 h-full'>

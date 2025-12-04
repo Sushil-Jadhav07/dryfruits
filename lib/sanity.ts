@@ -123,31 +123,45 @@ export function getResponsiveImageUrls(source: any, breakpoints: number[]) {
   }
 }
 
-// Import AVIF support functions
-import { getAvifSupport, convertToAvifFormat } from './avif-support'
-
 // Function to check if AVIF is supported by the browser
+// Uses dynamic import to avoid loading browser-only code in server components
 export async function isAvifSupported(): Promise<boolean> {
-  return await getAvifSupport()
+  // Only import avif-support in browser environment
+  if (typeof window === 'undefined') {
+    return false
+  }
+  
+  try {
+    const { getAvifSupport } = await import('./avif-support')
+    return await getAvifSupport()
+  } catch (error) {
+    console.warn('Error checking AVIF support:', error)
+    return false
+  }
 }
 
 // Function to get the best available image format (AVIF > WebP > JPG)
+// Uses dynamic import to avoid loading browser-only code in server components
 export async function getBestImageFormat(
   source: any,
   width: number,
   height: number,
   quality: number = 80
 ): Promise<string> {
-  try {
-    const supportsAvif = await getAvifSupport()
-    if (supportsAvif) {
-      return getAvifImageUrl(source, width, height, quality)
+  // Only check AVIF support in browser environment
+  if (typeof window !== 'undefined') {
+    try {
+      const { getAvifSupport } = await import('./avif-support')
+      const supportsAvif = await getAvifSupport()
+      if (supportsAvif) {
+        return getAvifImageUrl(source, width, height, quality)
+      }
+    } catch (error) {
+      console.warn('Error checking AVIF support:', error)
     }
-  } catch (error) {
-    console.warn('Error checking AVIF support:', error)
   }
   
-  // Fallback to WebP if AVIF is not supported
+  // Fallback to WebP if AVIF is not supported or in server environment
   return getOptimizedImageUrl(source, width, height, quality, 'webp')
 }
 

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useProduct } from '@/hooks'
-import { getImageUrl, getAvifImageUrl } from '../../../../lib/sanity'
+import { getImageUrl, getAvifImageUrl } from '@/lib/sanity'
 import type { Product } from '../../../../types/sanity'
 import MenuTwo from '@/components/Header/Menu/MenuTwo'
 import Footer from '@/components/Footer/Footer'
@@ -137,12 +137,6 @@ const ProductDetailPage = () => {
                 <div className="container mx-auto px-4">
                     <div className="text-center py-8">
                         <p className="text-red-600 text-lg">Product not found or error loading product.</p>
-                        <button 
-                            onClick={() => router.push('/')}
-                            className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                        >
-                            Back to Home
-                        </button>
                     </div>
                 </div>
             </div>
@@ -155,15 +149,6 @@ const ProductDetailPage = () => {
         ? product.productImages[selectedImageIndex] 
         : product.coverImage
 
-    // Handle back navigation
-    const handleBackToCategory = () => {
-        if (product?.category?.slug?.current) {
-            router.push(`/category/${product.category.slug.current}`)
-        } else {
-            router.push('/')
-        }
-    }
-
     return (
         <>
             {/* Header */}
@@ -173,23 +158,6 @@ const ProductDetailPage = () => {
             
             <div className="min-h-screen bg-gray-50 py-8">
                 <div className="container mx-auto px-4">
-                    {/* Back Button */}
-                    <button
-                        onClick={handleBackToCategory}
-                        className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6 transition-colors duration-200 group"
-                    >
-                        <svg 
-                            className="w-5 h-5 transform group-hover:-translate-x-1 transition-transform duration-200" 
-                            fill="none" 
-                            stroke="currentColor" 
-                            viewBox="0 0 24 24"
-                        >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                        </svg>
-                        <span className="font-medium">
-                            Back to {product?.category?.name || 'Category'}
-                        </span>
-                    </button>
 
                     {/* Product Details */}
                     <div className="bg-white rounded-lg overflow-hidden">
@@ -263,24 +231,24 @@ const ProductDetailPage = () => {
                                     )}
                                 </div>
                                 
-                                {/* Thumbnail Images */}
+                                {/* Thumbnail Images Grid */}
                                 {hasMultipleImages ? (
                                     <div className="space-y-2">
                                         <p className="text-sm font-medium text-gray-700">Product Images ({product.productImages?.length || 0})</p>
-                                        <div className="flex gap-2 overflow-x-auto pb-2">
+                                        <div className="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-4 gap-2">
                                             {product.productImages?.map((image, index) => (
                                                 <button
                                                     key={index}
                                                     onClick={() => goToImage(index)}
-                                                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
+                                                    className={`w-full aspect-square rounded-lg overflow-hidden border-2 transition-all duration-200 ${
                                                         index === selectedImageIndex 
                                                             ? 'border-blue-500 ring-2 ring-blue-200 scale-105' 
-                                                            : 'border-gray-200 hover:border-gray-300 hover:scale-102'
+                                                            : 'border-gray-200 hover:border-gray-300 hover:scale-105'
                                                     }`}
                                                 >
                                                     {image.asset && image.asset._ref ? (
                                                         <img
-                                                            src={getImageUrl(image, 80, 80)}
+                                                            src={getImageUrl(image, 150, 150)}
                                                             alt={`${product.name} - Image ${index + 1}`}
                                                             className="w-full h-full object-cover"
                                                             onError={(e) => {

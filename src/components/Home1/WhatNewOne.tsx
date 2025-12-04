@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import Link from 'next/link'
 import { useCategories, useProducts } from '@/hooks'
 import { getImageUrl } from '../../../lib/sanity'
 import type { Category, Product } from '../../../types/sanity'
@@ -83,7 +84,11 @@ const WhatNewOne: React.FC<Props> = ({ start, limit }) => {
                     {filteredProducts.length > 0 ? (
                         <div className="list-product grid lg:grid-cols-4 grid-cols-2 sm:gap-[30px] gap-[20px] md:mt-10 mt-6">
                             {filteredProducts.map((product) => (
-                                <div key={product._id} className="bg-white rounded-lg overflow-hidden">
+                                <Link 
+                                    key={product._id} 
+                                    href={`/product/${product.slug.current}`}
+                                    className="bg-white rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-200"
+                                >
                                     <div className="aspect-w-16 aspect-h-9">
                                         {product.coverImage && product.coverImage.asset && product.coverImage.asset._ref ? (
                                             <img
@@ -102,20 +107,19 @@ const WhatNewOne: React.FC<Props> = ({ start, limit }) => {
                                         </div>
                                     </div>
                                     <div className="p-4">
-                                      
                                         <h3 className="text-lg font-semibold text-center text-gray-900 mb-2">{product.name}</h3>
-                                       
-                                        <div className="flex items-center justify-between">
-                                           
-                                            <button 
-                                                onClick={() => window.location.href = `/product/${product.slug.current}`}
-                                                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
-                                            >
-                                                View Details
-                                            </button>
-                                        </div>
+                                        {product.price && (
+                                            <div className="text-center mb-2">
+                                                <span className="text-xl font-bold text-gray-900">${product.price}</span>
+                                                {product.comparePrice && product.comparePrice > product.price && (
+                                                    <span className="ml-2 text-sm text-gray-500 line-through">
+                                                        ${product.comparePrice}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
-                                </div>
+                                </Link>
                             ))}
                         </div>
                     ) : (
